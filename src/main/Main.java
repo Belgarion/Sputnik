@@ -1,6 +1,10 @@
 package main;
 
+import java.util.Vector;
+
 import network.Client;
+import network.NetworkRecvThread;
+import network.NetworkSendThread;
 import planets.Earth;
 import Entities.Player;
 
@@ -20,9 +24,12 @@ public class Main extends SimpleApplication {
 	Player player;
 	Earth earth;
 	Client client;
+	Global global = Global.getInstance();
 	
 	sharedstate.Player playerData;
 	sharedstate.SharedState state;
+	
+	Vector<Thread> threads;
 	
 	boolean initialized = false;
 
@@ -31,12 +38,16 @@ public class Main extends SimpleApplication {
 		app.start();
 	}
 	
+	public void destroy() {
+		super.destroy();
+		global.quit = true;
+	}
+	
 	@Override
 	public void simpleUpdate(float tpf){
 		if (!initialized) return; // don't run updates before everything is initialized
 		
 		player.update();
-		state.update(); // TODO: move dead reckoning to separate thread
 	}
 	
 
@@ -47,13 +58,25 @@ public class Main extends SimpleApplication {
 		initKeys();
 		initCam();
 		
-		try { // TODO: move network to separate thread
+		threads = new Vector<Thread>();
+		try {
 			client = new Client("::1", 12345);
+			NetworkRecvThread recvThread = new NetworkRecvThread(state, client);
+			NetworkSendThread sendThread = new NetworkSendThread(state, client);
+			threads.add(recvThread);
+			threads.add(sendThread);
 		} catch (Exception e) {
 			System.out.println("Exception caugh for client: " + e.toString());
 			e.printStackTrace();
 		}
+		
+		DeadReckoningThread drt = new DeadReckoningThread(state);
+		threads.add(drt);
 		initialized = true;
+		
+		for (Thread t : threads) {
+			t.start(); // start all threads after everything is initialized
+		}
 
 	}
 
@@ -62,11 +85,9 @@ public class Main extends SimpleApplication {
 		inputManager.addMapping("up", new KeyTrigger(KeyInput.KEY_S));
 		inputManager.addMapping("left", new KeyTrigger(KeyInput.KEY_A));
 		inputManager.addMapping("right", new KeyTrigger(KeyInput.KEY_D));
-		inputManager.addMapping("send", new KeyTrigger(KeyInput.KEY_1));
-		inputManager.addMapping("recv", new KeyTrigger(KeyInput.KEY_2));
 
 		inputManager.addListener(analogListener, "left", "right", "down",
-				"up", "send", "recv");
+				"up");
 
 	}
 
@@ -129,22 +150,6 @@ public class Main extends SimpleApplication {
 				//player.pnode.rotate(-player.rotateSpeed, 0, 0);
 
 				playerData.setPosition(playerData.getPosition().add(playerData.getSpeed(), 0, 0));
-			}
-			if (name.equals("send")) {
-				try {
-					client.sendState(state);
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-			if (name.equals("recv")) {
-				try {
-					client.recvState();
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
 			}
 		}
 	};

@@ -8,7 +8,7 @@ public class Player extends GameObject {
 	
 	public Player() {
 		super();
-		setSpeed(0.01f);
+		setSpeed(0.1f);
 		setColor(ColorRGBA.Blue);
 	}
 

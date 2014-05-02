@@ -18,7 +18,7 @@ public class Client {
 		ip = InetAddress.getByName(hostname);
 		this.port = port;
 		System.out.println("Hostname: " + hostname + " resolved to " + ip.toString());
-		sock.setSoTimeout(5); // TODO: remove this when network is moved to separate thread
+		sock.setSoTimeout(1000); // 1 second timeout, makes it possible for recvthread to exit
 	}
 	
 	public void sendState(sharedstate.SharedState state) throws Exception {
@@ -30,11 +30,13 @@ public class Client {
 		}
 	}
 	
-	public void recvState() throws Exception {
+	public void recvState(sharedstate.SharedState state) throws Exception {
 		DatagramPacket recvPacket = new DatagramPacket(recvBuffer, recvBuffer.length);
 		sock.receive(recvPacket);
 		String data = new String(recvPacket.getData());
 		System.out.println("Received data: " + data);
+		
+		// TODO: Update state
 	}
 	
 	public void close() {
