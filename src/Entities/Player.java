@@ -13,24 +13,25 @@ public class Player {
 	
 	public Node pnode;
 	public Geometry ship;
-	public float speed;
-	public float rotateSpeed;
 	
-	public Player(AssetManager assetManager){
-		rotateSpeed = 0.005f;
+	private sharedstate.Player data;
+	
+	public Player(sharedstate.Player data, AssetManager assetManager){
+		this.data = data;
 		pnode = new Node();
 		Box box1 = new Box(5,2,3);
-        Geometry ship = new Geometry("Ship", box1);
-        ship.setLocalTranslation(new Vector3f(1,-1,1));
+        ship = new Geometry("Ship", box1);
+        ship.setLocalTranslation(data.getPosition());
         Material mat1 = new Material(assetManager, 
                 "Common/MatDefs/Misc/Unshaded.j3md");
-        mat1.setColor("Color", ColorRGBA.Blue);
+        mat1.setColor("Color", data.getColor());
         ship.setMaterial(mat1);
         ship.rotate(0, (float) Math.PI / 2, 0);
         pnode.attachChild(ship);
 	}
 	
 	public void update(){
+		ship.setLocalTranslation(data.getPosition());
 		Quaternion rot = pnode.getLocalRotation();
 		//pnode.setLocal
 	}
