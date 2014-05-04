@@ -15,7 +15,7 @@ public class DeadReckoningThread extends Thread {
 		while (!global.quit) {
 			state.update();
 			try {
-				Thread.sleep(10); // update every 10ms
+				Thread.sleep(5); // update every 5ms
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

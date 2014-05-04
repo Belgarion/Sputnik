@@ -8,8 +8,8 @@ public class SharedState {
 	Player player; // my player
 	
 	public SharedState(Player player) {
-		objects = new Vector<GameObject>();
-		myObjects = new Vector<GameObject>();
+		objects = new Vector<GameObject>(); // TODO: change to hashmap
+		myObjects = new Vector<GameObject>(); // TODO: change to hashmap
 		this.player = player;
 		myObjects.add(player);
 	}

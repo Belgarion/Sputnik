@@ -10,7 +10,7 @@ public abstract class GameObject { // TODO: synchronized
 	protected Vector3f direction; // calculated direction
 	protected Vector3f position; // calculated position
 	
-	protected int lastTimestamp; // when the latest data was received
+	protected double lastTimestamp; // when the latest data was received
 	
 	protected Vector3f realDirection; // last received value for direction
 	protected Vector3f realPosition; // last received value for posititon
@@ -42,8 +42,17 @@ public abstract class GameObject { // TODO: synchronized
 	public Vector3f getPosition() { return position; }
 	public float getSpeed() { return speed; }
 	
-	public void setDirection(Vector3f direction) { realDirection = direction; }
-	public void setPosition(Vector3f position) { realPosition = position; }
-	public void setSpeed(float s) { speed = s; }
+	public void setDirection(Vector3f direction) { updateTime(); realDirection = direction; realPosition = position; }
+	public void setPosition(Vector3f position) { updateTime(); realPosition = position; }
+	public void setSpeed(float s) { updateTime(); speed = s; }
+	
+	public double getTimeDifference() {
+		double currentTime = System.currentTimeMillis() / 1000.0d;
+		double diff = currentTime - lastTimestamp;
+		return diff;
+	}
 
+	public void updateTime() {
+		lastTimestamp = System.currentTimeMillis() / 1000.0d;
+	}
 }

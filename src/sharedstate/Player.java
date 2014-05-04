@@ -8,14 +8,14 @@ public class Player extends GameObject {
 	
 	public Player() {
 		super();
-		setSpeed(0.1f);
+		setSpeed(0.6f);
 		setColor(ColorRGBA.Blue);
 	}
 
 	@Override
 	public void update() {
-		//this.position.add(this.direction.mult(getSpeed()));
-		this.position = this.realPosition;
+		this.direction = this.realDirection;
+		this.position = this.realPosition.add(this.direction.mult((float) (getSpeed()*getTimeDifference())));
 	}
 
 	@Override

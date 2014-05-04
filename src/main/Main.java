@@ -130,26 +130,17 @@ public class Main extends SimpleApplication {
 
 	private AnalogListener analogListener = new AnalogListener() {
 		public void onAnalog(String name, float value, float tpf) {
-
-			Quaternion rotation = cam.getRotation();
-
 			if (name.equals("right")) {
-				//player.pnode.rotate(0, 0, player.rotateSpeed); //TODO: rotations should update the playerData object.
-				playerData.setPosition(playerData.getPosition().add(0, -playerData.getSpeed(), 0));
+				playerData.setDirection(new Vector3f(1,0,0)); // TODO: keypresses should rotate the ship around the axes and update the direction based on this
 			}
 			if (name.equals("left")) {
-				//player.pnode.rotate(0, 0, -player.rotateSpeed);
-				playerData.setPosition(playerData.getPosition().add(0, playerData.getSpeed(), 0));
+				playerData.setDirection(new Vector3f(-1,0,0));
 			}
 			if (name.equals("down")) {
-				//player.pnode.rotate(player.rotateSpeed, 0, 0);
-
-				playerData.setPosition(playerData.getPosition().add(-playerData.getSpeed(), 0, 0));
+				playerData.setDirection(new Vector3f(0,-1,0));
 			}
 			if (name.equals("up")) {
-				//player.pnode.rotate(-player.rotateSpeed, 0, 0);
-
-				playerData.setPosition(playerData.getPosition().add(playerData.getSpeed(), 0, 0));
+				playerData.setDirection(new Vector3f(0,1,0));
 			}
 		}
 	};
