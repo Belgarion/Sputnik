@@ -39,6 +39,15 @@ public class Player {
 		ship = assetManager.loadModel("Wraith Raider Starship.obj");
         ship.setLocalScale(0.05f);
         
+        
+        Material shipmat = new Material(assetManager, 
+                "Common/MatDefs/Light/Lighting.j3md");
+            shipmat.setBoolean("UseMaterialColors",true);    
+            shipmat.setColor("Diffuse",ColorRGBA.White);
+            shipmat.setColor("Specular",ColorRGBA.White);
+            shipmat.setFloat("Shininess", 1f);  // [0,128]
+            ship.setMaterial(shipmat);
+        
         pos = new Vector3f(posx, posy, posz);
         dir = new Vector3f(0, 0, 1);
         pnode.setLocalTranslation(pos);

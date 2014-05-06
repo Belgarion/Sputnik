@@ -11,13 +11,13 @@ import com.jme3.util.TangentBinormalGenerator;
 
 public class Moon extends Planet{
 	
-	//public Node mnode;
+	public Node mnode;
 	public Geometry moon;
-	float rotspeed = 0.005f;
+	float rotspeed = 0.0005f;
 
 	public Moon(int size,  AssetManager assetManager, Planet earth) {
 		super(size);
-		//mnode = new Node();
+		mnode = new Node();
 		assetManager.registerLocator("Assets", FileLocator.class);
 		Sphere sphere = new Sphere(50, 50, size);
 		moon = new Geometry("Moon", sphere);
@@ -34,7 +34,12 @@ public class Moon extends Planet{
 		//moon.rotate(-(float)Math.PI / 2, -(float)Math.PI / 2,0);
 		//mnode.rotate(0,0, (float) (2 * Math.PI / 360) * 23);
 		moon.setLocalTranslation(400, 0, 0);
-		earth.node.attachChild(moon);
+		mnode.attachChild(moon);
+		earth.node.attachChild(mnode);
+	}
+	
+	public void update(){
+		mnode.rotate(0, rotspeed, 0);
 	}
 	
 	

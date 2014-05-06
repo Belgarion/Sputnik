@@ -48,20 +48,9 @@ public class Main extends SimpleApplication {
 	public void simpleUpdate(float tpf){
 		player.update();
 		earth.update();
+		moon.update();
 		for(int i = 0; i < beams.size(); i++){
 			beams.get(i).update();
-			if(beams.get(i).pos.x > 2000 || beams.get(i).pos.x < -2000){
-				beams.remove(i);
-				rootNode.detachChild(beams.get(i).bnode);
-			}
-			else if(beams.get(i).pos.y > 2000 || beams.get(i).pos.y < -2000){
-				beams.remove(i);
-				rootNode.detachChild(beams.get(i).bnode);
-			}
-			else if(beams.get(i).pos.z > 2000 || beams.get(i).pos.z < -2000){
-				beams.remove(i);
-				rootNode.detachChild(beams.get(i).bnode);
-			}
 		}
 	}
 	
