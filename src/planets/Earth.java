@@ -15,10 +15,12 @@ public class Earth extends Planet {
 
 	public Node enode;
 	public Geometry earth;
+	float rotspeed = 0.00005f;
 
 	public Earth(int size, AssetManager assetManager) {
 		super(size);
 		enode = new Node();
+		super.node = enode;
 		assetManager.registerLocator("Assets", FileLocator.class);
 		Sphere sphere = new Sphere(50, 50, size);
 		earth = new Geometry("Earth", sphere);
@@ -32,8 +34,13 @@ public class Earth extends Planet {
 		mat1.setColor("Specular", ColorRGBA.White);
 		mat1.setFloat("Shininess", 1f); // [0,128]
 		earth.setMaterial(mat1);
-		earth.rotate(32, 41, 31);
+		earth.rotate(-(float)Math.PI / 2, -(float)Math.PI / 2,0);
+		enode.rotate(0,0, (float) (2 * Math.PI / 360) * 23);
 		enode.attachChild(earth);
+	}
+	
+	public void update(){
+		enode.rotate(0, rotspeed, 0);
 	}
 
 }
