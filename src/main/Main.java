@@ -38,6 +38,8 @@ public class Main extends SimpleApplication {
 	ArrayList<Beam> beams;
 	AudioNode audio_beam;
 	Moon moon;
+	DirectionalLight sun;
+	float sunrot = 0;
 
 	public static void main(String[] args) {
 		Main app = new Main();
@@ -139,7 +141,8 @@ public class Main extends SimpleApplication {
 	}
 
 	private void initLights() {
-		DirectionalLight sun = new DirectionalLight();
+		
+		sun = new DirectionalLight();
 		sun.setDirection(new Vector3f(0, 0, 1.0f));
 		DirectionalLight sun2 = new DirectionalLight();
 		sun2.setDirection(new Vector3f(0, 0, -1.0f));
@@ -148,8 +151,8 @@ public class Main extends SimpleApplication {
 		DirectionalLight sun4 = new DirectionalLight();
 		sun4.setDirection(new Vector3f(1, 0, 1.0f));
 		rootNode.addLight(sun);
-		rootNode.addLight(sun2);
-		rootNode.addLight(sun3);
+		//rootNode.addLight(sun2);
+		//rootNode.addLight(sun3);
 		//rootNode.addLight(sun4);
 
 	}
