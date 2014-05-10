@@ -20,7 +20,7 @@ public class Beam {
 	
 	public Beam(Player player, Vector3f dir, AssetManager assetManager){
 		this.dir = dir;
-		this.pos = player.pos;
+		this.pos = player.data.getPosition();
 		this.speed = 0.5f;
 		bnode = new Node();
 		Box box1 = new Box(0.5f,0.5f,0.5f);

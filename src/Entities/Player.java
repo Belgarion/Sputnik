@@ -21,15 +21,13 @@ public class Player {
 	public float rotateSpeed;
 	public Vector3f dir, pos;
 	public float rotx, roty, rotz;
-	private sharedstate.Player data;
+	public sharedstate.Player data;
 
-	public Player(sharedstate.Player data, AssetManager assetManager,
-			float posx, float posy, float posz) {
+	public Player(sharedstate.Player data, AssetManager assetManager) {
 		rotateSpeed = 0.005f;
 
 		this.data = data;
 		pnode = new Node();
-		this.speed = 0;
 		/*
 		 * Geometry ship = new Geometry("Ship", box1);
 		 * ship.setLocalTranslation(new Vector3f(0,0,0)); Box box1 = new
@@ -52,25 +50,22 @@ public class Player {
 		shipmat.setFloat("Shininess", 1f); // [0,128]
 		ship.setMaterial(shipmat);
 
-		pos = new Vector3f(posx, posy, posz);
-		dir = new Vector3f(0, 0, 1);
-		pnode.setLocalTranslation(pos);
+		//data.setPosition(new Vector3f(posx, posy, posz));
+		data.setDirection(new Vector3f(0, 0, 1));
+		pnode.setLocalTranslation(data.getPosition());
 		pnode.attachChild(ship);
 	}
 
 	public void update() {
-		pos = new Vector3f(pos.x + dir.x * speed, pos.y + dir.y * speed, pos.z
-				+ dir.z * speed);
-		pnode.setLocalTranslation(pos);
-	}
+		Vector3f pos = data.getPosition();
 
-	public void setSpeed(int i) {
-		speed = (float) i / 100;
+		pnode.setLocalTranslation(pos);
 	}
 
 	public void setRotation(float i, float j, float k) {
 		pnode.rotate(i, j, k);
 		dir = pnode.getLocalRotation().getRotationColumn(2);
+		data.setDirection(dir);
 	}
 
 }

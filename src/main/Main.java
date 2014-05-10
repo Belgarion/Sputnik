@@ -82,8 +82,8 @@ public class Main extends SimpleApplication {
 		CollisionResults results = new CollisionResults();
         // Convert screen click to 3d position
         Vector2f click2d = inputManager.getCursorPosition();
-        Vector3f ppos = player.pos;
-        Vector3f pdir = player.dir;
+        Vector3f ppos = playerData.getPosition();
+        Vector3f pdir = playerData.getDirection();
         // Aim the ray from the clicked spot forwards.
         Ray ray = new Ray(ppos, pdir);
         // Collect intersections between ray and all nodes in results list.
@@ -93,7 +93,8 @@ public class Main extends SimpleApplication {
           // (For each “hit”, we know distance, impact point, geometry.)
           float dist = results.getCollision(i).getDistance();
           if(dist < 2){
-        	  System.out.println(dist);
+        	  System.out.println("krash");
+        	  playerData.setPosition(new Vector3f(0,0,0));
           }
           Vector3f pt = results.getCollision(i).getContactPoint();
           String target = results.getCollision(i).getGeometry().getName();
@@ -197,7 +198,7 @@ public class Main extends SimpleApplication {
 		
 		earth = new Earth(150, assetManager);
 		moon = new Moon(50, assetManager, (Planet)earth);
-		player = new Player(playerData,assetManager, 0, 0, 0);
+		player = new Player(playerData,assetManager);
 		rootNode.attachChild(player.pnode);
 		rootNode.attachChild(earth.enode);
 		earth.enode.setLocalTranslation(0, 0, 400);
@@ -233,37 +234,31 @@ public class Main extends SimpleApplication {
 			if (name.equals("right")) {
 				player.setRotation(0,0, player.rotateSpeed);
 				//player.pnode.rotate(0, 0, player.rotateSpeed);
-				playerData.setDirection(new Vector3f(1,0,0)); // TODO: keypresses should rotate the ship around the axes and update the direction based on this
 			}
 			if (name.equals("left")) {
 				player.setRotation(0,0, -player.rotateSpeed);
 				//player.pnode.rotate(0, 0, -player.rotateSpeed);
-				playerData.setDirection(new Vector3f(-1,0,0));
 			}
 			if (name.equals("down")) {
 				player.setRotation(player.rotateSpeed,0, 0);
 				//player.pnode.rotate(player.rotateSpeed, 0, 0);
-				playerData.setDirection(new Vector3f(0,-1,0));
 			}
 			if (name.equals("up")) {
 				player.setRotation(-player.rotateSpeed,0, 0);
 				//player.pnode.rotate(-player.rotateSpeed, 0, 0);
 			}
 			if (name.equals("one")) {
-				player.setSpeed(1);
+				playerData.setSpeed(1);
 			}
 			if (name.equals("two")) {
-				player.setSpeed(2);
+				playerData.setSpeed(2);
 			}
 			if (name.equals("three")) {
-				player.setSpeed(3);
+				playerData.setSpeed(3);
 			}
 			if (name.equals("four")) {
-				player.setSpeed(4);
-				playerData.setDirection(new Vector3f(0,1,0));
+				playerData.setSpeed(40);
 			}
-			
-			
 		}
 	};
 
