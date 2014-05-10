@@ -2,6 +2,7 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/jmonkey"/>
 	<classpathentry kind="lib" path="D:/Program/libs/jMonkey/lib/eventbus.jar"/>
 	<classpathentry kind="lib" path="D:/Program/libs/jMonkey/lib/gluegen-rt.jar"/>
 	<classpathentry kind="lib" path="D:/Program/libs/jMonkey/lib/jbullet.jar"/>

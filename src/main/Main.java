@@ -1,7 +1,11 @@
 package main;
 
 import java.util.ArrayList;
+import java.util.Vector;
 
+import network.Client;
+import network.NetworkRecvThread;
+import network.NetworkSendThread;
 import planets.Earth;
 import planets.Moon;
 import planets.Planet;
@@ -40,22 +44,62 @@ public class Main extends SimpleApplication {
 	Moon moon;
 	DirectionalLight sun;
 	float sunrot = 0;
+	Client client;
+	Global global = Global.getInstance();
+	
+	sharedstate.Player playerData;
+	sharedstate.SharedState state;
+	
+	Vector<Thread> threads;
+	
+	boolean initialized = false;
 
 	public static void main(String[] args) {
 		Main app = new Main();
 		app.start();
 	}
 	
+	public void destroy() {
+		super.destroy();
+		global.quit = true;
+	}
+	
 	@Override
 	public void simpleUpdate(float tpf){
+		if (!initialized) return; // don't run updates before everything is initialized
+		
 		player.update();
 		earth.update();
 		moon.update();
 		for(int i = 0; i < beams.size(); i++){
 			beams.get(i).update();
 		}
+		playerChecker();
 	}
 	
+
+	private void playerChecker() {
+		CollisionResults results = new CollisionResults();
+        // Convert screen click to 3d position
+        Vector2f click2d = inputManager.getCursorPosition();
+        Vector3f ppos = player.pos;
+        Vector3f pdir = player.dir;
+        // Aim the ray from the clicked spot forwards.
+        Ray ray = new Ray(ppos, pdir);
+        // Collect intersections between ray and all nodes in results list.
+        rootNode.collideWith(ray, results);
+        // (Print the results so we see what is going on:)
+        for (int i = 0; i < results.size(); i++) {
+          // (For each “hit”, we know distance, impact point, geometry.)
+          float dist = results.getCollision(i).getDistance();
+          if(dist < 2){
+        	  System.out.println(dist);
+          }
+          Vector3f pt = results.getCollision(i).getContactPoint();
+          String target = results.getCollision(i).getGeometry().getName();
+        }
+		
+	}
 
 	@Override
 	public void simpleInitApp() {
@@ -64,6 +108,26 @@ public class Main extends SimpleApplication {
 		initKeys();
 		initCam();
 		initAudio();
+		
+		threads = new Vector<Thread>();
+		try {
+			client = new Client("::1", 12345);
+			NetworkRecvThread recvThread = new NetworkRecvThread(state, client);
+			NetworkSendThread sendThread = new NetworkSendThread(state, client);
+			threads.add(recvThread);
+			threads.add(sendThread);
+		} catch (Exception e) {
+			System.out.println("Exception caugh for client: " + e.toString());
+			e.printStackTrace();
+		}
+		
+		DeadReckoningThread drt = new DeadReckoningThread(state);
+		threads.add(drt);
+		initialized = true;
+		
+		for (Thread t : threads) {
+			t.start(); // start all threads after everything is initialized
+		}
 
 	}
 	
@@ -113,7 +177,7 @@ public class Main extends SimpleApplication {
 		flyCam.setEnabled(false);
 		Cam = new ChaseCamera(cam, player.pnode, inputManager);
 		Cam.setInvertVerticalAxis(true);
-		Cam.setMaxDistance(1000);
+		Cam.setMaxDistance(4000);
 		Cam.setMinDistance(2);
 		Cam.setDefaultDistance(50);
 
@@ -127,9 +191,13 @@ public class Main extends SimpleApplication {
 
 	private void initObjects() {
 		//cam.setLocation(new Vector3f(0f, 0f, 50f));
+		playerData = new sharedstate.Player();
+		state = new sharedstate.SharedState(playerData);
+		
+		
 		earth = new Earth(150, assetManager);
 		moon = new Moon(50, assetManager, (Planet)earth);
-		player = new Player(assetManager, 0, 0, 0);
+		player = new Player(playerData,assetManager, 0, 0, 0);
 		rootNode.attachChild(player.pnode);
 		rootNode.attachChild(earth.enode);
 		earth.enode.setLocalTranslation(0, 0, 400);
@@ -165,14 +233,17 @@ public class Main extends SimpleApplication {
 			if (name.equals("right")) {
 				player.setRotation(0,0, player.rotateSpeed);
 				//player.pnode.rotate(0, 0, player.rotateSpeed);
+				playerData.setDirection(new Vector3f(1,0,0)); // TODO: keypresses should rotate the ship around the axes and update the direction based on this
 			}
 			if (name.equals("left")) {
 				player.setRotation(0,0, -player.rotateSpeed);
 				//player.pnode.rotate(0, 0, -player.rotateSpeed);
+				playerData.setDirection(new Vector3f(-1,0,0));
 			}
 			if (name.equals("down")) {
 				player.setRotation(player.rotateSpeed,0, 0);
 				//player.pnode.rotate(player.rotateSpeed, 0, 0);
+				playerData.setDirection(new Vector3f(0,-1,0));
 			}
 			if (name.equals("up")) {
 				player.setRotation(-player.rotateSpeed,0, 0);
@@ -189,6 +260,7 @@ public class Main extends SimpleApplication {
 			}
 			if (name.equals("four")) {
 				player.setSpeed(4);
+				playerData.setDirection(new Vector3f(0,1,0));
 			}
 			
 			
