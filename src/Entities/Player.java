@@ -32,7 +32,7 @@ public class Player {
 	
 	public void update(){
 		ship.setLocalTranslation(data.getPosition());
-		Quaternion rot = pnode.getLocalRotation();
+		Quaternion rot = pnode.getLocalRotation();//Riktning på skeppet ska sättas på något sätt.
 		//pnode.setLocal
 	}
 

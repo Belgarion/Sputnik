@@ -24,7 +24,7 @@ public class Client {
 	public void sendState(sharedstate.SharedState state) throws Exception {
 		Vector<GameObject> objs = state.getMyObjects();
 		for (GameObject obj : objs) {
-			sendBuffer = obj.toNetString().getBytes();
+			sendBuffer = obj.toNetString().getBytes();//Gör om all info om objektet till en sträng.
 			DatagramPacket sendPacket = new DatagramPacket(sendBuffer, sendBuffer.length, ip, port);
 			sock.send(sendPacket);
 		}
