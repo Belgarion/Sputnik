@@ -59,6 +59,7 @@ public class Player {
 		pnode.attachChild(ship);
 	}
 
+
 	public void update() {
 		Vector3f pos = data.getPosition();
 		data.setPosition(pos);
