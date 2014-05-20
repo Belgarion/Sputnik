@@ -22,10 +22,13 @@ public class Player {
 	public Vector3f dir, pos;
 	public float rotx, roty, rotz;
 	public sharedstate.Player data;
+	public String name;
+	public int team;
 
-	public Player(sharedstate.Player data, AssetManager assetManager) {
+	public Player(sharedstate.Player data, AssetManager assetManager, String name, int team) {
 		rotateSpeed = 0.005f;
-
+		this.team = team;
+		this.name = name;
 		this.data = data;
 		pnode = new Node();
 		/*
@@ -58,7 +61,7 @@ public class Player {
 
 	public void update() {
 		Vector3f pos = data.getPosition();
-
+		data.setPosition(pos);
 		pnode.setLocalTranslation(pos);
 	}
 

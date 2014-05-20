@@ -6,9 +6,11 @@ import com.jme3.math.Vector3f;
 public class Player extends GameObject {
 	private float rotateSpeed;
 	private ColorRGBA color;
+	public String name;
 	
-	public Player() {
+	public Player(String name) {
 		super();
+		this.name = name;
 		setSpeed(0.6f);
 		setColor(ColorRGBA.Blue);
 	}
@@ -16,9 +18,6 @@ public class Player extends GameObject {
 	@Override
 	public void update() {
 		this.direction = this.realDirection;
-		float speed = getSpeed();
-		Vector3f pos = getPosition();
-		Vector3f dir = getDirection();
 		this.position = this.realPosition.add(this.direction.mult((float) (getSpeed()*getTimeDifference())));
 	}
 

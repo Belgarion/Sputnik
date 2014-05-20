@@ -40,12 +40,15 @@ public class Main extends SimpleApplication {
 	Player player;
 	Earth earth;
 	ArrayList<Beam> beams;
+	ArrayList<Player> players = new ArrayList<>();
 	AudioNode audio_beam;
 	Moon moon;
 	DirectionalLight sun;
 	float sunrot = 0;
 	Client client;
 	Global global = Global.getInstance();
+	Meny meny;
+	War war;
 	
 	sharedstate.Player playerData;
 	sharedstate.SharedState state;
@@ -69,6 +72,7 @@ public class Main extends SimpleApplication {
 		if (!initialized) return; // don't run updates before everything is initialized
 		
 		player.update();
+		warChecker();
 		earth.update();
 		moon.update();
 		for(int i = 0; i < beams.size(); i++){
@@ -78,10 +82,14 @@ public class Main extends SimpleApplication {
 	}
 	
 
+	private void warChecker() {
+		
+		
+	}
+
 	private void playerChecker() {
 		CollisionResults results = new CollisionResults();
         // Convert screen click to 3d position
-        Vector2f click2d = inputManager.getCursorPosition();
         Vector3f ppos = playerData.getPosition();
         Vector3f pdir = playerData.getDirection();
         // Aim the ray from the clicked spot forwards.
@@ -93,13 +101,18 @@ public class Main extends SimpleApplication {
           // (For each “hit”, we know distance, impact point, geometry.)
           float dist = results.getCollision(i).getDistance();
           if(dist < 2){
-        	  System.out.println("krash");
+        	  Geometry target = results.getClosestCollision().getGeometry();
+        	  if(target.getName().equals("Beam")){
+        		  break;
+        	  }
+        	  
+        	  if(target.getName().equals("warzone")){
+        		  System.out.println("warzone");
+        		  break;
+        	  }
         	  playerData.setPosition(new Vector3f(0,0,0));
           }
-          Vector3f pt = results.getCollision(i).getContactPoint();
-          String target = results.getCollision(i).getGeometry().getName();
         }
-		
 	}
 
 	@Override
@@ -109,6 +122,7 @@ public class Main extends SimpleApplication {
 		initKeys();
 		initCam();
 		initAudio();
+		meny = new Meny(assetManager);
 		
 		threads = new Vector<Thread>();
 		try {
@@ -163,7 +177,7 @@ public class Main extends SimpleApplication {
 		        Vector2f click2d = inputManager.getCursorPosition();
 		        Vector3f click3d = cam.getWorldCoordinates(new Vector2f(click2d.x, click2d.y), 0f).clone();
 		        Vector3f dir = cam.getWorldCoordinates(new Vector2f(click2d.x, click2d.y), 1f).subtractLocal(click3d).normalizeLocal();
-		        Beam beam = new Beam(player, dir, assetManager);
+		        Beam beam = new Beam(state, player, dir, assetManager);
 		        beams.add(beam);
 		        rootNode.attachChild(beam.bnode);
 		        audio_beam.playInstance();
@@ -192,13 +206,14 @@ public class Main extends SimpleApplication {
 
 	private void initObjects() {
 		//cam.setLocation(new Vector3f(0f, 0f, 50f));
-		playerData = new sharedstate.Player();
+		playerData = new sharedstate.Player("namn");
 		state = new sharedstate.SharedState(playerData);
 		
 		
 		earth = new Earth(150, assetManager);
 		moon = new Moon(50, assetManager, (Planet)earth);
-		player = new Player(playerData,assetManager);
+		player = new Player(playerData,assetManager, "namn", 1);
+		players.add(player);
 		rootNode.attachChild(player.pnode);
 		rootNode.attachChild(earth.enode);
 		earth.enode.setLocalTranslation(0, 0, 400);
@@ -207,6 +222,7 @@ public class Main extends SimpleApplication {
 		rootNode.attachChild(SkyFactory.createSky(
 	            assetManager, "Skybox360_002", false));
 		 */
+		war = new War((Planet)earth, assetManager);
 	}
 
 	private void initLights() {
@@ -248,18 +264,20 @@ public class Main extends SimpleApplication {
 				//player.pnode.rotate(-player.rotateSpeed, 0, 0);
 			}
 			if (name.equals("one")) {
-				playerData.setSpeed(1);
+				playerData.setSpeed(10);
 			}
 			if (name.equals("two")) {
-				playerData.setSpeed(2);
+				playerData.setSpeed(20);
 			}
 			if (name.equals("three")) {
-				playerData.setSpeed(3);
+				playerData.setSpeed(30);
 			}
 			if (name.equals("four")) {
 				playerData.setSpeed(40);
 			}
 		}
 	};
+
+	
 
 }

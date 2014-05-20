@@ -7,6 +7,7 @@ import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
+import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Sphere;
 import com.jme3.texture.Texture;
 import com.jme3.util.TangentBinormalGenerator;
@@ -37,6 +38,9 @@ public class Earth extends Planet {
 		earth.rotate(-(float)Math.PI / 2, -(float)Math.PI / 2,0);
 		enode.rotate(0,0, (float) (2 * Math.PI / 360) * 23);
 		enode.attachChild(earth);
+	}
+	public void setWarzone(Geometry child){
+		enode.attachChild(child);
 	}
 	
 	public void update(){
