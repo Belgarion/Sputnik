@@ -176,16 +176,23 @@ public class Main extends SimpleApplication {
 	private void initCam() {
 		flyCam.setEnabled(false);
 		Cam = new ChaseCamera(cam, player.pnode, inputManager);
-		Cam.setInvertVerticalAxis(true);
-		Cam.setMaxDistance(4000);
-		Cam.setMinDistance(2);
+		//Cam.setInvertVerticalAxis(true);
+		//Cam.setMaxDistance(4000);
+		//Cam.setMinDistance(2);
 		Cam.setDefaultDistance(50);
+		Cam.setSmoothMotion(true);
+		
+		
 
 		Cam.setDefaultHorizontalRotation((float) (-Math.PI / 2));
 		Cam.setDefaultVerticalRotation((float) (Math.PI / 8));
-		Cam.setMaxVerticalRotation(360);
-		Cam.setMinVerticalRotation(-360);
-		Cam.setToggleRotationTrigger(new MouseButtonTrigger(MouseInput.BUTTON_RIGHT));
+		//Cam.setMaxVerticalRotation(360);
+		//Cam.setMinVerticalRotation(-360);
+		//Cam.setToggleRotationTrigger(new MouseButtonTrigger(MouseInput.BUTTON_RIGHT));
+		Cam.setTrailingEnabled(true);
+		Cam.setRotationSensitivity(500f);
+		Cam.setChasingSensitivity(50f);
+	
 
 	}
 

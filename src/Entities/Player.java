@@ -22,10 +22,12 @@ public class Player {
 	public Vector3f dir, pos;
 	public float rotx, roty, rotz;
 	private sharedstate.Player data;
+	public Vector3f upVector;
 
 	public Player(sharedstate.Player data, AssetManager assetManager,
 			float posx, float posy, float posz) {
 		rotateSpeed = 0.005f;
+		upVector = new Vector3f(0,1,0);
 
 		this.data = data;
 		pnode = new Node();
