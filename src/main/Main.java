@@ -206,7 +206,8 @@ public class Main extends SimpleApplication {
 
 	private void initObjects() {
 		//cam.setLocation(new Vector3f(0f, 0f, 50f));
-		playerData = new sharedstate.Player("namn");
+		playerData = new sharedstate.Player();
+		playerData.setName("namn");
 		state = new sharedstate.SharedState(playerData);
 		
 		
