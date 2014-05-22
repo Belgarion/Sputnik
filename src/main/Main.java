@@ -1,7 +1,11 @@
 package main;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Vector;
+import java.util.concurrent.ConcurrentHashMap;
+
+import javax.swing.text.html.HTMLDocument.HTMLReader.IsindexAction;
 
 import network.Client;
 import network.NetworkRecvThread;
@@ -35,6 +39,7 @@ import com.jme3.scene.Geometry;
 import com.jme3.util.SkyFactory;
 
 public class Main extends SimpleApplication {
+	ConcurrentHashMap<sharedstate.GameObject, GraphicsObject> objs = new ConcurrentHashMap<sharedstate.GameObject, GraphicsObject>();
 
 	ChaseCamera Cam;
 	Player player;
@@ -70,6 +75,19 @@ public class Main extends SimpleApplication {
 	@Override
 	public void simpleUpdate(float tpf){
 		if (!initialized) return; // don't run updates before everything is initialized
+		
+		// Check that all GameObjects have GrahpicsObjects
+		for (sharedstate.GameObject obj : state.getObjects()) {
+			if (!objs.containsKey(obj)) {
+				if (obj instanceof sharedstate.Player) {
+					Entities.Player p = new Player((sharedstate.Player)obj, assetManager);
+				} else if (obj instanceof sharedstate.BeamD){
+					weapons.Beam b = new weapons.Beam((sharedstate.BeamD)obj, assetManager);
+				}
+				GraphicsObject go = new GraphicsObject(obj);
+				objs.put(obj,  go);
+			}
+		}
 		
 		player.update();
 		warChecker();
@@ -177,7 +195,9 @@ public class Main extends SimpleApplication {
 		        Vector2f click2d = inputManager.getCursorPosition();
 		        Vector3f click3d = cam.getWorldCoordinates(new Vector2f(click2d.x, click2d.y), 0f).clone();
 		        Vector3f dir = cam.getWorldCoordinates(new Vector2f(click2d.x, click2d.y), 1f).subtractLocal(click3d).normalizeLocal();
-		        Beam beam = new Beam(state, player, dir, assetManager);
+		        sharedstate.BeamD beamdata = new sharedstate.BeamD(playerData);
+		        state.getObjects().add(beamdata);
+		        Beam beam = new Beam(beamdata, assetManager);
 		        beams.add(beam);
 		        rootNode.attachChild(beam.bnode);
 		        audio_beam.playInstance();
@@ -211,9 +231,9 @@ public class Main extends SimpleApplication {
 		state = new sharedstate.SharedState(playerData);
 		
 		
-		earth = new Earth(150, assetManager);
-		moon = new Moon(50, assetManager, (Planet)earth);
-		player = new Player(playerData,assetManager, "namn", 1);
+		earth = new Earth(new sharedstate.Planet(), 150, assetManager);
+		moon = new Moon(new sharedstate.Planet(), 50, assetManager, earth);
+		player = new Player(playerData, assetManager);
 		players.add(player);
 		rootNode.attachChild(player.pnode);
 		rootNode.attachChild(earth.enode);
@@ -223,7 +243,7 @@ public class Main extends SimpleApplication {
 		rootNode.attachChild(SkyFactory.createSky(
 	            assetManager, "Skybox360_002", false));
 		 */
-		war = new War((Planet)earth, assetManager);
+		war = new War(earth, assetManager);
 	}
 
 	private void initLights() {

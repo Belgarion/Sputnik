@@ -8,13 +8,15 @@ public class BeamD extends GameObject{
 	private Player player;
 	private int start = 100;
 	
-	public BeamD(SharedState state, Player player){
+	public BeamD() {
 		super();
-		setSpeed(100);
+		this.speed = 100;
+	}
+	
+	public BeamD(Player player){
+		this();
 		this.player = player;
-		state.myObjects.add(this);
-		
-		//this.direction = dir;
+		this.position = player.getPosition();
 	}
 
 	@Override

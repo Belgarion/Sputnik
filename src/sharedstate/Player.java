@@ -7,11 +7,14 @@ public class Player extends GameObject {
 	private float rotateSpeed;
 	private ColorRGBA color;
 	private String name;
+	private int team;
 	
 	public Player() {
 		super();
 		setSpeed(0.6f);
 		setColor(ColorRGBA.Blue);
+		setName("Unnamed player");
+		setTeam(1);
 	}
 
 	@Override
@@ -58,6 +61,14 @@ public class Player extends GameObject {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public int getTeam() {
+		return team;
+	}
+
+	public void setTeam(int team) {
+		this.team = team;
 	}
 
 }

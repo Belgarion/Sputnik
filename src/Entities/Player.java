@@ -12,7 +12,7 @@ import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
 
-public class Player {
+public class Player extends main.GraphicsObject {
 
 	public Node pnode;
 	// public Geometry ship;
@@ -25,10 +25,9 @@ public class Player {
 	public String name;
 	public int team;
 
-	public Player(sharedstate.Player data, AssetManager assetManager, String name, int team) {
+	public Player(sharedstate.Player data, AssetManager assetManager) {
+		super(data);
 		rotateSpeed = 0.005f;
-		this.team = team;
-		this.name = name;
 		this.data = data;
 		pnode = new Node();
 		/*

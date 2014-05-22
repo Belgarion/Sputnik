@@ -3,6 +3,7 @@ package network;
 import java.net.*;
 import java.util.UUID;
 import java.util.Vector;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import sharedstate.GameObject;
 
@@ -23,7 +24,7 @@ public class Client {
 	}
 	
 	public void sendState(sharedstate.SharedState state) throws Exception {
-		Vector<GameObject> objs = state.getMyObjects();
+		CopyOnWriteArrayList<GameObject> objs = state.getMyObjects();
 		for (GameObject obj : objs) {
 			sendBuffer = obj.toNetString().getBytes();//G�r om all info om objektet till en str�ng.
 			DatagramPacket sendPacket = new DatagramPacket(sendBuffer, sendBuffer.length, ip, port);
