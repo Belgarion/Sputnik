@@ -110,6 +110,7 @@ public class Main extends SimpleApplication {
 		RED.setText("Red: " + s2);
 		
 
+
 	}
 
 	@Override
@@ -195,10 +196,13 @@ public class Main extends SimpleApplication {
 	private void initCam() {
 		flyCam.setEnabled(false);
 		Cam = new ChaseCamera(cam, player.pnode, inputManager);
-		Cam.setInvertVerticalAxis(true);
-		Cam.setMaxDistance(4000);
-		Cam.setMinDistance(2);
+		//Cam.setInvertVerticalAxis(true);
+		//Cam.setMaxDistance(4000);
+		//Cam.setMinDistance(2);
 		Cam.setDefaultDistance(50);
+		Cam.setSmoothMotion(true);
+		
+		
 
 		Cam.setDefaultHorizontalRotation((float) (-Math.PI / 2));
 		Cam.setDefaultVerticalRotation((float) (Math.PI / 8));
@@ -210,8 +214,10 @@ public class Main extends SimpleApplication {
 	}
 
 	private void initObjects() {
-		// cam.setLocation(new Vector3f(0f, 0f, 50f));
-		playerData = new sharedstate.Player("namn");
+
+		//cam.setLocation(new Vector3f(0f, 0f, 50f));
+		playerData = new sharedstate.Player();
+		playerData.setName("namn");
 		state = new sharedstate.SharedState(playerData);
 
 		earth = new Earth(150, assetManager);

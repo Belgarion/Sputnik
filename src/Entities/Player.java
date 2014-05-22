@@ -21,14 +21,24 @@ public class Player {
 	public float rotateSpeed;
 	public Vector3f dir, pos;
 	public float rotx, roty, rotz;
-	public sharedstate.Player data;
+
+	private sharedstate.Player data;
+	public Vector3f upVector;
+
+	
 	public String name;
 	public int team;
 
+
 	public Player(sharedstate.Player data, AssetManager assetManager, String name, int team) {
 		rotateSpeed = 0.005f;
+
+		upVector = new Vector3f(0,1,0);
+
+
 		this.team = team;
 		this.name = name;
+
 		this.data = data;
 		pnode = new Node();
 		/*
