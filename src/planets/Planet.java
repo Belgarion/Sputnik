@@ -18,4 +18,10 @@ public class Planet extends main.GraphicsObject {
 		node.attachChild(child);
 	}
 
+	@Override
+	public void update() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

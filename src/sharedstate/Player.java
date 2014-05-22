@@ -35,7 +35,7 @@ public class Player extends GameObject {
 
 	@Override
 	public void fromNetString(String data) {
-		// TODO Auto-generated method stub
+		super.fromNetString(data);
 
 	}
 

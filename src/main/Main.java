@@ -104,14 +104,18 @@ public class Main extends SimpleApplication {
 			if (!objs.containsKey(obj)) {
 				if (obj instanceof sharedstate.Player) {
 					Entities.Player p = new Player((sharedstate.Player)obj, assetManager);
+					rootNode.attachChild(p.pnode);
+					objs.put(obj,  p);
 				} else if (obj instanceof sharedstate.BeamD){
 					weapons.Beam b = new weapons.Beam((sharedstate.BeamD)obj, assetManager);
+					objs.put(obj,  b);
 				}
-				GraphicsObject go = new GraphicsObject(obj);
-				objs.put(obj,  go);
 			}
 		}
 		
+		for (GraphicsObject go : objs.values()) {
+			go.update();
+		}
 		player.update();
 
 		
@@ -246,6 +250,7 @@ public class Main extends SimpleApplication {
 		moon = new Moon(new sharedstate.Planet(), 50, assetManager, earth);
 		player = new Player(playerData, assetManager);
 		players.add(player);
+		objs.put(playerData, player);
 		rootNode.attachChild(player.pnode);
 		rootNode.attachChild(earth.enode);
 		earth.enode.setLocalTranslation(0, 0, 400);
