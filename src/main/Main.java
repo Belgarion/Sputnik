@@ -104,6 +104,7 @@ public class Main extends SimpleApplication {
 			if (!objs.containsKey(obj)) {
 				if (obj instanceof sharedstate.Player) {
 					Entities.Player p = new Player((sharedstate.Player)obj, assetManager);
+					rootNode.attachChild(p.pnode);
 				} else if (obj instanceof sharedstate.BeamD){
 					weapons.Beam b = new weapons.Beam((sharedstate.BeamD)obj, assetManager);
 				}
@@ -218,8 +219,8 @@ public class Main extends SimpleApplication {
 		flyCam.setEnabled(false);
 		Cam = new ChaseCamera(cam, player.pnode, inputManager);
 		//Cam.setInvertVerticalAxis(true);
-		//Cam.setMaxDistance(4000);
-		//Cam.setMinDistance(2);
+		Cam.setMaxDistance(4000);
+		Cam.setMinDistance(2);
 		Cam.setDefaultDistance(50);
 		Cam.setSmoothMotion(true);
 		
