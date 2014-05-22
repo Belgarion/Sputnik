@@ -13,6 +13,7 @@ import network.NetworkSendThread;
 import planets.Earth;
 import planets.Moon;
 import planets.Planet;
+import sharedstate.BeamD;
 import sharedstate.WarD;
 import weapons.Beam;
 import Entities.Player;
@@ -200,7 +201,9 @@ public class Main extends SimpleApplication {
 							.getWorldCoordinates(
 									new Vector2f(click2d.x, click2d.y), 1f)
 							.subtractLocal(click3d).normalizeLocal();
-					Beam beam = new Beam(state, player, dir, assetManager);
+					sharedstate.BeamD beamdata = new sharedstate.BeamD(playerData);
+					state.getMyObjects().add(beamdata);
+					Beam beam = new Beam(beamdata, assetManager);
 					beams.add(beam);
 					rootNode.attachChild(beam.bnode);
 					audio_beam.playInstance();
