@@ -24,7 +24,7 @@ public class Player extends main.GraphicsObject {
 	public Vector3f dir, pos;
 	public float rotx, roty, rotz;
 
-	private sharedstate.Player data;
+	public sharedstate.Player data;
 	public Vector3f upVector;
 
 	
