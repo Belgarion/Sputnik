@@ -1,5 +1,6 @@
 package network;
 
+import java.io.IOException;
 import java.net.*;
 import java.util.HashMap;
 import java.util.UUID;
@@ -9,7 +10,9 @@ public class Server {
 	private HashMap<UUID, String> state; // store received data in a hashmap with uuid as key and netstring as value (this makes the server independent of the data types, meaning that the server should never have to be updated --> infinite uptime)
 	private byte[] recvBuffer = new byte[1024];
 	private byte[] sendBuffer = new byte[1024];
+	private byte[] sendBuffer2 = new byte[1024];
 	DatagramSocket sock;
+	
 	
 	
 	// TODO: Handle client disconnects, remove player from hashmap, even if timeout (add client id to all objects owned by that client)
@@ -45,8 +48,6 @@ public class Server {
 					// TODO: Remove objects owned by player
 					continue;
 				}
-				
-				
 				// Send ack
 				UUID id = Utils.parseId(data);
 				state.put(id, data);
@@ -57,16 +58,32 @@ public class Server {
 				// Send all data in hashmap to client
 				// TODO: Keep list of all clients, send periodically (every 5 seconds or so) and when objects change.
 				// TODO: Move sending data to clients to thread?
-				for (UUID id2 : state.keySet()) {
-					sendBuffer = state.get(id2).getBytes();
-					sendPacket = new DatagramPacket(sendBuffer, sendBuffer.length, ip, port);
-					sock.send(sendPacket);
-				}
+				ServerThread sendToClients = new ServerThread(this);
+				
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
 	}
+	
+	//Skicka uppdateringar till alla klienter. Gör detta från en ny tråd.
+	public void sendToClients(){
+		for(ClientData client : clients.values()){
+			InetAddress ip = client.getIp();
+			int port = client.getPort();
+			
+			for (UUID id2 : state.keySet()) {
+				sendBuffer2 = state.get(id2).getBytes();
+				DatagramPacket sendPacket2 = new DatagramPacket(sendBuffer2, sendBuffer2.length, ip, port);
+				try {
+					sock.send(sendPacket2);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		}
+	}}
+	
 	
 
 	

@@ -25,6 +25,7 @@ public class Beam {
 		this.data = new BeamD(state, player.data);
 		this.dir = dir;
 		this.pos = player.data.getPosition();
+		this.player = player;
 		
 		data.setPosition(pos);
 		data.setDirection(dir);

@@ -60,4 +60,8 @@ public abstract class GameObject { // TODO: synchronized
 		update();
 		lastTimestamp = System.currentTimeMillis() / 1000.0d;
 	}
+	
+	public double getLastTimeStamp(){
+		return lastTimestamp;
+	}
 }

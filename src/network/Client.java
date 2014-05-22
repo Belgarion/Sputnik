@@ -10,6 +10,7 @@ public class Client {
 	private DatagramSocket sock;
 	private InetAddress ip;
 	private int port;
+	private double lastSentUpdate;
 	
 	private byte[] sendBuffer = new byte[1024];
 	private byte[] recvBuffer = new byte[1024];
@@ -25,9 +26,12 @@ public class Client {
 	public void sendState(sharedstate.SharedState state) throws Exception {
 		Vector<GameObject> objs = state.getMyObjects();
 		for (GameObject obj : objs) {
-			sendBuffer = obj.toNetString().getBytes();//G�r om all info om objektet till en str�ng.
-			DatagramPacket sendPacket = new DatagramPacket(sendBuffer, sendBuffer.length, ip, port);
-			sock.send(sendPacket);
+			//Skicka endast objekt som uppdaterats sedan sist.
+			if(obj.getLastTimeStamp() > lastSentUpdate){
+				sendBuffer = obj.toNetString().getBytes();//G�r om all info om objektet till en str�ng.
+				DatagramPacket sendPacket = new DatagramPacket(sendBuffer, sendBuffer.length, ip, port);
+				sock.send(sendPacket);
+			}
 		}
 	}
 	

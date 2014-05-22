@@ -8,6 +8,7 @@ import sharedstate.SharedState;
 public class NetworkSendThread extends Thread {
 	private SharedState state;
 	private Client client;
+	
 
 	Global global = Global.getInstance();
 	
