@@ -1,13 +1,16 @@
 package sharedstate;
 
 import com.jme3.math.ColorRGBA;
+import com.jme3.math.Vector3f;
 
 public class Player extends GameObject {
 	private float rotateSpeed;
 	private ColorRGBA color;
+	public String name;
 	
-	public Player() {
+	public Player(String name) {
 		super();
+		this.name = name;
 		setSpeed(0.6f);
 		setColor(ColorRGBA.Blue);
 	}

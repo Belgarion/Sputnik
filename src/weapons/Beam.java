@@ -1,5 +1,7 @@
 package weapons;
 
+import sharedstate.BeamD;
+import sharedstate.SharedState;
 import Entities.Player;
 
 import com.jme3.asset.AssetManager;
@@ -17,11 +19,16 @@ public class Beam {
 	public Node bnode;
 	float speed;
 	Player player;
+	sharedstate.BeamD data;
 	
-	public Beam(Player player, Vector3f dir, AssetManager assetManager){
+	public Beam(SharedState state, Player player, Vector3f dir, AssetManager assetManager){
+		this.data = new BeamD(state, player.data);
 		this.dir = dir;
-		this.pos = player.pos;
-		this.speed = 0.5f;
+		this.pos = player.data.getPosition();
+		
+		data.setPosition(pos);
+		data.setDirection(dir);
+		
 		bnode = new Node();
 		Box box1 = new Box(0.5f,0.5f,0.5f);
         Geometry beam = new Geometry("Beam", box1);
@@ -30,14 +37,14 @@ public class Beam {
                 "Common/MatDefs/Misc/Unshaded.j3md");
         mat1.setColor("Color", ColorRGBA.Red);
         beam.setMaterial(mat1);
-        
-        bnode.rotate(dir.x, dir.y, dir.z);
-        bnode.setLocalTranslation(pos);
+        bnode.setLocalTranslation(player.data.getPosition());
         bnode.attachChild(beam);
 	}
 	
 	public void update(){
-		pos = new Vector3f(pos.x + dir.x * speed, pos.y + dir.y * speed, pos.z + dir.z * speed);
+		//data.update();
+		data.setDirection(dir);
+		Vector3f pos = data.getPosition();
 		bnode.setLocalTranslation(pos);
 	}
 
