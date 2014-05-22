@@ -58,6 +58,9 @@ public class Client {
 		for (GameObject g2 : state.getObjects()) {
 			if (id.equals(g2.getId())) {
 				found = true;
+				if (g.getLastTimeStamp() <= g2.getLastTimeStamp()) {
+					break; // old data dont use
+				}
 				g2.fromNetString(data);
 				break;
 			}
