@@ -1,6 +1,6 @@
 package sharedstate;
 
-import java.util.Vector;
+
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class SharedState {
@@ -9,11 +9,12 @@ public class SharedState {
 	Player player; // my player
 	
 	public SharedState(Player player) {
-		objects = new CopyOnWriteArrayList<GameObject>(); // TODO: change to hashmap
-		myObjects = new CopyOnWriteArrayList<GameObject>(); // TODO: change to hashmap
+		objects = new CopyOnWriteArrayList<GameObject>();
+		myObjects = new CopyOnWriteArrayList<GameObject>();
 		
 		this.player = player;
 		myObjects.add(player);
+		objects.add(player);
 	}
 	
 	public void update() {

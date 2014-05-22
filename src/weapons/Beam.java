@@ -12,13 +12,14 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.shape.Box;
 
-public class Beam {
+public class Beam extends main.GraphicsObject {
 	public Node bnode;
 	float speed;
 	Player player;
 	sharedstate.BeamD data;
 	
 	public Beam(sharedstate.BeamD data, AssetManager assetManager){
+		super(data);
 		this.data = data;
 		
 		bnode = new Node();

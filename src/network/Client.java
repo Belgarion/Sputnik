@@ -45,7 +45,6 @@ public class Client {
 			p.fromNetString(data);
 			addOrUpdate(state, p, data);
 		}
-		// TODO: Update state
 	}
 	
 	public void addOrUpdate(sharedstate.SharedState state, GameObject g, String data) {
