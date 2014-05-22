@@ -33,7 +33,7 @@ public class War {
 		counter1 = 0;
 		counter2 = 0;
 		this.planet = planet;
-		this.size = planet.size * 1.2f;
+		this.size = planet.size * 1.3f;
 		//Sphere sphere = new Sphere(50, 50, planet.size + 100);
 		Box box = new Box(size, size, size);
 		war = new Geometry("warzone", box);
@@ -45,7 +45,6 @@ public class War {
 		//war.setLocalTranslation(planet.node.getLocalTranslation());
 		planet.setWarzone(war);
 		pos = planet.enode.getLocalTranslation();
-		System.out.println(pos);
 	}
 	
 	

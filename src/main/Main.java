@@ -121,10 +121,10 @@ public class Main extends SimpleApplication {
 			beams.get(i).update();
 		}
 		playerChecker();
-
+		warChecker();
 		String s1 = Long.toString(ward.counter1);
 		String s2 = Long.toString(ward.counter2);
-		warChecker();
+		
 		GREEN.setText("Green: " + s1);
 		RED.setText("Red: " + s2);
 		
@@ -218,10 +218,10 @@ public class Main extends SimpleApplication {
 		flyCam.setEnabled(false);
 		Cam = new ChaseCamera(cam, player.pnode, inputManager);
 		//Cam.setInvertVerticalAxis(true);
-		//Cam.setMaxDistance(4000);
-		//Cam.setMinDistance(2);
+		Cam.setMaxDistance(4000);
+		Cam.setMinDistance(2);
 		Cam.setDefaultDistance(50);
-		Cam.setSmoothMotion(true);
+		//Cam.setSmoothMotion(true);
 		
 		
 
@@ -343,33 +343,6 @@ public class Main extends SimpleApplication {
 					break;
 				}
 				
-				
-				
-				/*Geometry target2;
-				try {
-					target2 = results.getCollision(1).getGeometry();
-
-				} catch (Exception e) {
-					System.out.println("Exception caught for client: "
-							+ e.toString());
-					warzone = false;
-					e.printStackTrace();
-					break;
-				}
-
-				if (target.getName().equals("warzone")) {
-
-					if (target2.getName().equals("Earth")) {
-						System.out.println("in");
-						warzone = true;
-						ward.setAttackers(player.team);
-						break;
-					} else {
-						warzone = false;
-						System.out.println("ut");
-						break;
-					}
-				}*/
 				playerData.setPosition(new Vector3f(0, 0, 0));
 			}
 
