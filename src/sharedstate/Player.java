@@ -6,11 +6,10 @@ import com.jme3.math.Vector3f;
 public class Player extends GameObject {
 	private float rotateSpeed;
 	private ColorRGBA color;
-	public String name;
+	private String name;
 	
-	public Player(String name) {
+	public Player() {
 		super();
-		this.name = name;
 		setSpeed(0.6f);
 		setColor(ColorRGBA.Blue);
 	}
@@ -32,7 +31,7 @@ public class Player extends GameObject {
 	}
 
 	@Override
-	public void fromNetString() {
+	public void fromNetString(String data) {
 		// TODO Auto-generated method stub
 
 	}
@@ -51,6 +50,14 @@ public class Player extends GameObject {
 
 	public void setColor(ColorRGBA color) {
 		this.color = color;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 }

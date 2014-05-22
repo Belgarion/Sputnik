@@ -98,7 +98,7 @@ public class Main extends SimpleApplication {
         rootNode.collideWith(ray, results);
         // (Print the results so we see what is going on:)
         for (int i = 0; i < results.size(); i++) {
-          // (For each “hit”, we know distance, impact point, geometry.)
+          // (For each ï¿½hitï¿½, we know distance, impact point, geometry.)
           float dist = results.getCollision(i).getDistance();
           if(dist < 2){
         	  Geometry target = results.getClosestCollision().getGeometry();
@@ -213,7 +213,8 @@ public class Main extends SimpleApplication {
 
 	private void initObjects() {
 		//cam.setLocation(new Vector3f(0f, 0f, 50f));
-		playerData = new sharedstate.Player("namn");
+		playerData = new sharedstate.Player();
+		playerData.setName("namn");
 		state = new sharedstate.SharedState(playerData);
 		
 		

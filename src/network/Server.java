@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.UUID;
 
 public class Server {
+	private HashMap<UUID, ClientData> clients;
 	private HashMap<UUID, String> state; // store received data in a hashmap with uuid as key and netstring as value (this makes the server independent of the data types, meaning that the server should never have to be updated --> infinite uptime)
 	private byte[] recvBuffer = new byte[1024];
 	private byte[] sendBuffer = new byte[1024];
@@ -33,10 +34,23 @@ public class Server {
 
 				System.out.println("Received from " + ip + " , port " + port + ": " + data);
 				
+				String type = Utils.parseType(data);
+				if (type == null) continue;
+				if (type.equals("connect")) {
+					UUID id = Utils.parseId(data);
+					clients.put(id, new ClientData(ip, port));
+					continue;
+				} else if (type.equals("disconnect")) {
+					UUID id = Utils.parseId(data);
+					// TODO: Remove objects owned by player
+					continue;
+				}
+				
+				
 				// Send ack
-				UUID id = parseId(data);
+				UUID id = Utils.parseId(data);
 				state.put(id, data);
-				sendBuffer = ("ACK " + id + "\n").getBytes();
+				sendBuffer = ("type:ACK " + id + "\n").getBytes();
 				DatagramPacket sendPacket = new DatagramPacket(sendBuffer, sendBuffer.length, ip, port);
 				sock.send(sendPacket);
 				
@@ -54,17 +68,7 @@ public class Server {
 		}
 	}
 	
-	public UUID parseId(String data) {
-		String[] lines = data.split("\n");
-		for (String line : lines) {
-			String[] parts = line.split(":", 2);
-			System.out.println("Line: " + line);
-			System.out.println("parts.length: " + parts.length);
-			System.out.println("Key: " + parts[0] + " value: " + parts[1] + "\n");
-			if (parts[0].equals("id")) {
-				return UUID.fromString(parts[1]);
-			}
-		}
-		return null;
-	}
+
+	
+
 }
