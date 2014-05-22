@@ -1,5 +1,7 @@
 package Entities;
 
+import jme3tools.optimize.LodGenerator;
+
 import com.jme3.asset.AssetManager;
 import com.jme3.asset.plugins.FileLocator;
 import com.jme3.asset.plugins.ZipLocator;
@@ -12,7 +14,7 @@ import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
 
-public class Player {
+public class Player extends main.GraphicsObject {
 
 	public Node pnode;
 	// public Geometry ship;
@@ -30,15 +32,11 @@ public class Player {
 	public int team;
 
 
-	public Player(sharedstate.Player data, AssetManager assetManager, String name, int team) {
+	public Player(sharedstate.Player data, AssetManager assetManager) {
+		super(data);
 		rotateSpeed = 0.005f;
-
 		upVector = new Vector3f(0,1,0);
-
-
-		this.team = team;
-		this.name = name;
-
+		this.team = 1;
 		this.data = data;
 		pnode = new Node();
 		/*
@@ -52,8 +50,9 @@ public class Player {
 
 		assetManager.registerLocator("Assets", FileLocator.class);
 		// assetManager.registerLocator("spaceship.zip", ZipLocator.class);
-		ship = assetManager.loadModel("Wraith Raider Starship.obj");
-		ship.setLocalScale(0.05f);
+		ship = assetManager.loadModel("shipA_OBJ.obj");
+		ship.setLocalScale(0.1f);
+		ship.rotate(0, (float)Math.PI, 0);
 
 		Material shipmat = new Material(assetManager,
 				"Common/MatDefs/Light/Lighting.j3md");
@@ -61,11 +60,15 @@ public class Player {
 		shipmat.setColor("Diffuse", ColorRGBA.White);
 		shipmat.setColor("Specular", ColorRGBA.White);
 		shipmat.setFloat("Shininess", 1f); // [0,128]
+
+		
 		ship.setMaterial(shipmat);
 
 		//data.setPosition(new Vector3f(posx, posy, posz));
 		data.setDirection(new Vector3f(0, 0, 1));
+		
 		pnode.setLocalTranslation(data.getPosition());
+		
 		pnode.attachChild(ship);
 	}
 

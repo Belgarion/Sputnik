@@ -15,8 +15,8 @@ public class Moon extends Planet{
 	public Geometry moon;
 	float rotspeed = 0.0005f;
 
-	public Moon(int size,  AssetManager assetManager, Planet earth) {
-		super(size);
+	public Moon(sharedstate.GameObject data, int size,  AssetManager assetManager, Planet earth) {
+		super(data, size);
 		mnode = new Node();
 		assetManager.registerLocator("Assets", FileLocator.class);
 		Sphere sphere = new Sphere(50, 50, size);

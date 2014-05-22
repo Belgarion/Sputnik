@@ -28,16 +28,21 @@ public abstract class GameObject { // TODO: synchronized
 	}
 	
 	public abstract void update(); // dead reckoning
+	
 	public String toNetString() { // convert to string for sending over network
 		StringBuffer sb = new StringBuffer();
 		sb.append("id:" + id + "\n");
 		sb.append("s:" + speed + "\n");
-		sb.append("p:" + position + "\n");
-		sb.append("d:" + direction + "\n");
+		sb.append("p:" + realPosition + "\n");
+		sb.append("d:" + realDirection + "\n");
+		sb.append("t:" + lastTimestamp + "\n");
 		return sb.toString();
 	}
 	public void fromNetString(String data) { // update values from string
 		id = Utils.parseId(data);
+		lastTimestamp = Utils.parseTimestamp(data);
+		realPosition = Utils.parsePosition(data);
+		realDirection = Utils.parseDirection(data);
 	}
 	
 	public Vector3f getDirection() { return direction; }

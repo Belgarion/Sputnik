@@ -12,23 +12,15 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.shape.Box;
 
-public class Beam {
-	
-	Vector3f dir;
-	public Vector3f pos;
+public class Beam extends main.GraphicsObject {
 	public Node bnode;
 	float speed;
 	Player player;
 	sharedstate.BeamD data;
 	
-	public Beam(SharedState state, Player player, Vector3f dir, AssetManager assetManager){
-		this.data = new BeamD(state, player.data);
-		this.dir = dir;
-		this.pos = player.data.getPosition();
-		this.player = player;
-		
-		data.setPosition(pos);
-		data.setDirection(dir);
+	public Beam(sharedstate.BeamD data, AssetManager assetManager){
+		super(data);
+		this.data = data;
 		
 		bnode = new Node();
 		Box box1 = new Box(0.5f,0.5f,0.5f);
@@ -38,13 +30,12 @@ public class Beam {
                 "Common/MatDefs/Misc/Unshaded.j3md");
         mat1.setColor("Color", ColorRGBA.Red);
         beam.setMaterial(mat1);
-        bnode.setLocalTranslation(player.data.getPosition());
+        bnode.setLocalTranslation(data.getPosition());
         bnode.attachChild(beam);
 	}
+
 	
 	public void update(){
-		//data.update();
-		data.setDirection(dir);
 		Vector3f pos = data.getPosition();
 		bnode.setLocalTranslation(pos);
 	}

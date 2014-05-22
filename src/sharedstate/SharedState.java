@@ -1,18 +1,20 @@
 package sharedstate;
 
-import java.util.Vector;
+
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class SharedState {
-	Vector<GameObject> objects; // all objects
-	Vector<GameObject> myObjects; // objects owned by me
+	CopyOnWriteArrayList<GameObject> objects; // all objects
+	CopyOnWriteArrayList<GameObject> myObjects; // objects owned by me
 	Player player; // my player
 	
 	public SharedState(Player player) {
-		objects = new Vector<GameObject>(); // TODO: change to hashmap
-		myObjects = new Vector<GameObject>(); // TODO: change to hashmap
+		objects = new CopyOnWriteArrayList<GameObject>();
+		myObjects = new CopyOnWriteArrayList<GameObject>();
 		
 		this.player = player;
 		myObjects.add(player);
+		objects.add(player);
 	}
 	
 	public void update() {
@@ -22,11 +24,11 @@ public class SharedState {
 		}
 	}
 	
-	public Vector<GameObject> getMyObjects() {
+	public CopyOnWriteArrayList<GameObject> getMyObjects() {
 		return myObjects;
 	}
 	
-	public Vector<GameObject> getObjects() {
+	public CopyOnWriteArrayList<GameObject> getObjects() {
 		return objects;
 	}
 }

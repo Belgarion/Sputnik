@@ -18,8 +18,8 @@ public class Earth extends Planet {
 	public Geometry earth;
 	float rotspeed = 0.00005f;
 
-	public Earth(int size, AssetManager assetManager) {
-		super(size);
+	public Earth(sharedstate.GameObject data, int size, AssetManager assetManager) {
+		super(data, size);
 		enode = new Node();
 		super.node = enode;
 		assetManager.registerLocator("Assets", FileLocator.class);
