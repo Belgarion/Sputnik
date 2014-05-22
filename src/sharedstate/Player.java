@@ -29,7 +29,7 @@ public class Player extends GameObject {
 	}
 
 	@Override
-	public void fromNetString() {
+	public void fromNetString(String data) {
 		// TODO Auto-generated method stub
 
 	}

@@ -24,4 +24,8 @@ public class SharedState {
 	public Vector<GameObject> getMyObjects() {
 		return myObjects;
 	}
+	
+	public Vector<GameObject> getObjects() {
+		return objects;
+	}
 }

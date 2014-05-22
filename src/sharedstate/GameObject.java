@@ -2,6 +2,8 @@ package sharedstate;
 
 import java.util.UUID;
 
+import network.Utils;
+
 import com.jme3.math.Vector3f;
 
 public abstract class GameObject { // TODO: synchronized
@@ -34,8 +36,8 @@ public abstract class GameObject { // TODO: synchronized
 		sb.append("d:" + direction + "\n");
 		return sb.toString();
 	}
-	public void fromNetString() { // update values from string
-		
+	public void fromNetString(String data) { // update values from string
+		id = Utils.parseId(data);
 	}
 	
 	public Vector3f getDirection() { return direction; }
@@ -45,6 +47,8 @@ public abstract class GameObject { // TODO: synchronized
 	public void setDirection(Vector3f direction) { updateTime(); realDirection = direction; realPosition = position; }
 	public void setPosition(Vector3f position) { updateTime(); realPosition = position; }
 	public void setSpeed(float s) { updateTime(); speed = s; }
+	
+	public UUID getId() { return id; }
 	
 	public double getTimeDifference() {
 		double currentTime = System.currentTimeMillis() / 1000.0d;

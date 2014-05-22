@@ -1,6 +1,7 @@
 package network;
 
 import java.net.*;
+import java.util.UUID;
 import java.util.Vector;
 
 import sharedstate.GameObject;
@@ -24,7 +25,7 @@ public class Client {
 	public void sendState(sharedstate.SharedState state) throws Exception {
 		Vector<GameObject> objs = state.getMyObjects();
 		for (GameObject obj : objs) {
-			sendBuffer = obj.toNetString().getBytes();//Gör om all info om objektet till en sträng.
+			sendBuffer = obj.toNetString().getBytes();//Gï¿½r om all info om objektet till en strï¿½ng.
 			DatagramPacket sendPacket = new DatagramPacket(sendBuffer, sendBuffer.length, ip, port);
 			sock.send(sendPacket);
 		}
@@ -36,7 +37,28 @@ public class Client {
 		String data = new String(recvPacket.getData());
 		System.out.println("Received data: " + data);
 		
+		String type = Utils.parseType(data);
+		if (type == null) return;
+		if (type.equals("Player")) {
+			sharedstate.Player p = new sharedstate.Player();
+			p.fromNetString(data);
+			addOrUpdate(state, p, data);
+		}
 		// TODO: Update state
+	}
+	
+	public void addOrUpdate(sharedstate.SharedState state, GameObject g, String data) {
+		UUID id = g.getId();
+
+		boolean found = false;
+		for (GameObject g2 : state.getObjects()) {
+			if (id.equals(g2.getId())) {
+				found = true;
+				g2.fromNetString(data);
+				break;
+			}
+		}
+		if (!found) state.getObjects().add(g);
 	}
 	
 	public void close() {

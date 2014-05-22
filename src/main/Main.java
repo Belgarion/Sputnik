@@ -90,7 +90,7 @@ public class Main extends SimpleApplication {
         rootNode.collideWith(ray, results);
         // (Print the results so we see what is going on:)
         for (int i = 0; i < results.size(); i++) {
-          // (For each “hit”, we know distance, impact point, geometry.)
+          // (For each ï¿½hitï¿½, we know distance, impact point, geometry.)
           float dist = results.getCollision(i).getDistance();
           if(dist < 2){
         	  System.out.println(dist);
