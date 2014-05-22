@@ -116,7 +116,6 @@ public class Main extends SimpleApplication {
 		for (GraphicsObject go : objs.values()) {
 			go.update();
 		}
-		player.update();
 
 		
 		earth.update();

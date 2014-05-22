@@ -65,7 +65,7 @@ public class Player extends main.GraphicsObject {
 		ship.setMaterial(shipmat);
 
 		//data.setPosition(new Vector3f(posx, posy, posz));
-		data.setDirection(new Vector3f(0, 0, 1));
+		//data.setDirection(new Vector3f(0, 0, 1));
 		
 		pnode.setLocalTranslation(data.getPosition());
 		
@@ -75,7 +75,6 @@ public class Player extends main.GraphicsObject {
 
 	public void update() {
 		Vector3f pos = data.getPosition();
-		data.setPosition(pos);
 		pnode.setLocalTranslation(pos);
 	}
 
