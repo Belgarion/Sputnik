@@ -13,6 +13,7 @@ import network.NetworkSendThread;
 import planets.Earth;
 import planets.Moon;
 import planets.Planet;
+import sharedstate.WarD;
 import weapons.Beam;
 import Entities.Player;
 
@@ -31,11 +32,13 @@ import com.jme3.input.controls.InputListener;
 import com.jme3.input.controls.KeyTrigger;
 import com.jme3.input.controls.MouseButtonTrigger;
 import com.jme3.light.DirectionalLight;
+import com.jme3.math.ColorRGBA;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Ray;
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
+import com.jme3.ui.Picture;
 import com.jme3.util.SkyFactory;
 
 public class Main extends SimpleApplication {
@@ -54,28 +57,47 @@ public class Main extends SimpleApplication {
 	Global global = Global.getInstance();
 	Meny meny;
 	War war;
-	
+	WarD ward;
+	boolean warzone = false;
+	int counter = 0;
+
+	BitmapText GREEN;
+	BitmapText RED;
+
 	sharedstate.Player playerData;
 	sharedstate.SharedState state;
-	
+
 	Vector<Thread> threads;
-	
+
 	boolean initialized = false;
 
 	public static void main(String[] args) {
 		Main app = new Main();
 		app.start();
 	}
-	
+
 	public void destroy() {
 		super.destroy();
 		global.quit = true;
 	}
+
 	
+
+	private void warChecker() {
+		war.checker(playerData);
+		if (war.warzone) {
+			ward.setAttackers(player.team);
+			ward.update();
+			//war.checker(playerData);
+		}
+
+	}
+
 	@Override
-	public void simpleUpdate(float tpf){
-		if (!initialized) return; // don't run updates before everything is initialized
-		
+	public void simpleUpdate(float tpf) {
+		if (!initialized)
+			return; // don't run updates before everything is initialized
+
 		// Check that all GameObjects have GrahpicsObjects
 		for (sharedstate.GameObject obj : state.getObjects()) {
 			if (!objs.containsKey(obj)) {
@@ -90,47 +112,23 @@ public class Main extends SimpleApplication {
 		}
 		
 		player.update();
-		warChecker();
+
+		
 		earth.update();
 		moon.update();
-		for(int i = 0; i < beams.size(); i++){
+		for (int i = 0; i < beams.size(); i++) {
 			beams.get(i).update();
 		}
 		playerChecker();
-	}
-	
 
-	private void warChecker() {
+		String s1 = Long.toString(ward.counter1);
+		String s2 = Long.toString(ward.counter2);
+		warChecker();
+		GREEN.setText("Green: " + s1);
+		RED.setText("Red: " + s2);
 		
-		
-	}
 
-	private void playerChecker() {
-		CollisionResults results = new CollisionResults();
-        // Convert screen click to 3d position
-        Vector3f ppos = playerData.getPosition();
-        Vector3f pdir = playerData.getDirection();
-        // Aim the ray from the clicked spot forwards.
-        Ray ray = new Ray(ppos, pdir);
-        // Collect intersections between ray and all nodes in results list.
-        rootNode.collideWith(ray, results);
-        // (Print the results so we see what is going on:)
-        for (int i = 0; i < results.size(); i++) {
-          // (For each �hit�, we know distance, impact point, geometry.)
-          float dist = results.getCollision(i).getDistance();
-          if(dist < 2){
-        	  Geometry target = results.getClosestCollision().getGeometry();
-        	  if(target.getName().equals("Beam")){
-        		  break;
-        	  }
-        	  
-        	  if(target.getName().equals("warzone")){
-        		  System.out.println("warzone");
-        		  break;
-        	  }
-        	  playerData.setPosition(new Vector3f(0,0,0));
-          }
-        }
+
 	}
 
 	@Override
@@ -140,8 +138,8 @@ public class Main extends SimpleApplication {
 		initKeys();
 		initCam();
 		initAudio();
-		meny = new Meny(assetManager);
-		
+		// meny = new Meny(assetManager);
+
 		threads = new Vector<Thread>();
 		try {
 			client = new Client("::1", 12345);
@@ -153,24 +151,26 @@ public class Main extends SimpleApplication {
 			System.out.println("Exception caugh for client: " + e.toString());
 			e.printStackTrace();
 		}
-		
+
 		DeadReckoningThread drt = new DeadReckoningThread(state);
 		threads.add(drt);
 		initialized = true;
-		
+
 		for (Thread t : threads) {
 			t.start(); // start all threads after everything is initialized
 		}
 
 	}
 	
-	private void initAudio(){
+	
+
+	private void initAudio() {
 		assetManager.registerLocator("Assets", FileLocator.class);
 		audio_beam = new AudioNode(assetManager, "LASER1.WAV", false);
-	    audio_beam.setPositional(false);
-	    audio_beam.setLooping(false);
-	    audio_beam.setVolume(1);
-	    rootNode.attachChild(audio_beam);
+		audio_beam.setPositional(false);
+		audio_beam.setLooping(false);
+		audio_beam.setVolume(1);
+		rootNode.attachChild(audio_beam);
 	}
 
 	private void initKeys() {
@@ -178,30 +178,33 @@ public class Main extends SimpleApplication {
 		inputManager.addMapping("up", new KeyTrigger(KeyInput.KEY_S));
 		inputManager.addMapping("left", new KeyTrigger(KeyInput.KEY_A));
 		inputManager.addMapping("right", new KeyTrigger(KeyInput.KEY_D));
-		
+
 		inputManager.addMapping("one", new KeyTrigger(KeyInput.KEY_1));
 		inputManager.addMapping("two", new KeyTrigger(KeyInput.KEY_2));
 		inputManager.addMapping("three", new KeyTrigger(KeyInput.KEY_3));
 		inputManager.addMapping("four", new KeyTrigger(KeyInput.KEY_4));
-		inputManager.addMapping("shootB", new MouseButtonTrigger(MouseInput.BUTTON_LEFT));
+		inputManager.addMapping("shootB", new MouseButtonTrigger(
+				MouseInput.BUTTON_LEFT));
 
-		inputManager.addListener(analogListener, "left", "right", "down",
-				"up", "one", "two", "three", "four", "pulse");
-		
+		inputManager.addListener(analogListener, "left", "right", "down", "up",
+				"one", "two", "three", "four", "pulse");
+
 		ActionListener acl = new ActionListener() {
 
 			public void onAction(String name, boolean keyPressed, float tpf) {
-				if(name.equals("shootB") && keyPressed){
-		        Vector2f click2d = inputManager.getCursorPosition();
-		        Vector3f click3d = cam.getWorldCoordinates(new Vector2f(click2d.x, click2d.y), 0f).clone();
-		        Vector3f dir = cam.getWorldCoordinates(new Vector2f(click2d.x, click2d.y), 1f).subtractLocal(click3d).normalizeLocal();
-		        sharedstate.BeamD beamdata = new sharedstate.BeamD(playerData);
-		        state.getObjects().add(beamdata);
-		        Beam beam = new Beam(beamdata, assetManager);
-		        beams.add(beam);
-		        rootNode.attachChild(beam.bnode);
-		        audio_beam.playInstance();
-		      }
+				if (name.equals("shootB") && keyPressed) {
+					Vector2f click2d = inputManager.getCursorPosition();
+					Vector3f click3d = cam.getWorldCoordinates(
+							new Vector2f(click2d.x, click2d.y), 0f).clone();
+					Vector3f dir = cam
+							.getWorldCoordinates(
+									new Vector2f(click2d.x, click2d.y), 1f)
+							.subtractLocal(click3d).normalizeLocal();
+					Beam beam = new Beam(state, player, dir, assetManager);
+					beams.add(beam);
+					rootNode.attachChild(beam.bnode);
+					audio_beam.playInstance();
+				}
 			}
 		};
 
@@ -211,20 +214,25 @@ public class Main extends SimpleApplication {
 	private void initCam() {
 		flyCam.setEnabled(false);
 		Cam = new ChaseCamera(cam, player.pnode, inputManager);
-		Cam.setInvertVerticalAxis(true);
-		Cam.setMaxDistance(4000);
-		Cam.setMinDistance(2);
+		//Cam.setInvertVerticalAxis(true);
+		//Cam.setMaxDistance(4000);
+		//Cam.setMinDistance(2);
 		Cam.setDefaultDistance(50);
+		Cam.setSmoothMotion(true);
+		
+		
 
 		Cam.setDefaultHorizontalRotation((float) (-Math.PI / 2));
 		Cam.setDefaultVerticalRotation((float) (Math.PI / 8));
 		Cam.setMaxVerticalRotation(360);
 		Cam.setMinVerticalRotation(-360);
-		Cam.setToggleRotationTrigger(new MouseButtonTrigger(MouseInput.BUTTON_RIGHT));
+		Cam.setToggleRotationTrigger(new MouseButtonTrigger(
+				MouseInput.BUTTON_RIGHT));
 
 	}
 
 	private void initObjects() {
+
 		//cam.setLocation(new Vector3f(0f, 0f, 50f));
 		playerData = new sharedstate.Player();
 		playerData.setName("namn");
@@ -239,15 +247,38 @@ public class Main extends SimpleApplication {
 		rootNode.attachChild(earth.enode);
 		earth.enode.setLocalTranslation(0, 0, 400);
 		beams = new ArrayList<Beam>();
-		/*assetManager.registerLocator("Skybox360_002.Zip", ZipLocator.class);
-		rootNode.attachChild(SkyFactory.createSky(
-	            assetManager, "Skybox360_002", false));
-		 */
+
 		war = new War(earth, assetManager);
+		rootNode.attachChild(war.war);
+		war.war.setLocalTranslation(earth.enode.getLocalTranslation());
+		ward = new WarD();
+
+		//guiNode.addLight(sun);
+		setDisplayFps(false); 
+		setDisplayStatView(false);
+
+		String s1 = Long.toString(ward.counter1);
+		String s2 = Long.toString(ward.counter2);
+		
+		GREEN = new BitmapText(guiFont, false);
+		GREEN.setSize(guiFont.getCharSet().getRenderedSize()); 
+		GREEN.setColor(ColorRGBA.Green); 
+		GREEN.setText("Green: " + s1); 
+		GREEN.setLocalTranslation(50, 100, 0); 
+
+		RED = new BitmapText(guiFont, false);
+		RED.setSize(guiFont.getCharSet().getRenderedSize()); 
+		RED.setColor(ColorRGBA.Red);
+		RED.setText("Red: " + s2);
+		RED.setLocalTranslation(50, 50, 0); 
+
+		guiNode.attachChild(RED);
+		guiNode.attachChild(GREEN);
+
 	}
 
 	private void initLights() {
-		
+
 		sun = new DirectionalLight();
 		sun.setDirection(new Vector3f(0, 0, 1.0f));
 		DirectionalLight sun2 = new DirectionalLight();
@@ -257,32 +288,26 @@ public class Main extends SimpleApplication {
 		DirectionalLight sun4 = new DirectionalLight();
 		sun4.setDirection(new Vector3f(1, 0, 1.0f));
 		rootNode.addLight(sun);
-		//rootNode.addLight(sun2);
-		//rootNode.addLight(sun3);
-		//rootNode.addLight(sun4);
+		rootNode.addLight(sun2);
+		// rootNode.addLight(sun3);
+		// rootNode.addLight(sun4);
 
 	}
 
 	private AnalogListener analogListener = new AnalogListener() {
 		public void onAnalog(String name, float value, float tpf) {
 
-			Quaternion rotation = cam.getRotation();
-
 			if (name.equals("right")) {
-				player.setRotation(0,0, player.rotateSpeed);
-				//player.pnode.rotate(0, 0, player.rotateSpeed);
+				player.setRotation(0, 0, player.rotateSpeed);
 			}
 			if (name.equals("left")) {
-				player.setRotation(0,0, -player.rotateSpeed);
-				//player.pnode.rotate(0, 0, -player.rotateSpeed);
+				player.setRotation(0, 0, -player.rotateSpeed);
 			}
 			if (name.equals("down")) {
-				player.setRotation(player.rotateSpeed,0, 0);
-				//player.pnode.rotate(player.rotateSpeed, 0, 0);
+				player.setRotation(player.rotateSpeed, 0, 0);
 			}
 			if (name.equals("up")) {
-				player.setRotation(-player.rotateSpeed,0, 0);
-				//player.pnode.rotate(-player.rotateSpeed, 0, 0);
+				player.setRotation(-player.rotateSpeed, 0, 0);
 			}
 			if (name.equals("one")) {
 				playerData.setSpeed(10);
@@ -300,5 +325,52 @@ public class Main extends SimpleApplication {
 	};
 
 	
+	private void playerChecker() {
+		CollisionResults results = new CollisionResults();
+		Vector3f ppos = playerData.getPosition();
+		Vector3f pdir = playerData.getDirection();
+		Ray ray = new Ray(ppos, pdir);
+		rootNode.collideWith(ray, results);
+		for (int i = 0; i < results.size(); i++) {
+			float dist = results.getCollision(i).getDistance();
+			if (dist < 2) {
 
+				Geometry target = results.getClosestCollision().getGeometry();
+				if (target.getName().equals("Beam") || target.getName().equals("warzone")) {
+					break;
+				}
+				
+				
+				
+				/*Geometry target2;
+				try {
+					target2 = results.getCollision(1).getGeometry();
+
+				} catch (Exception e) {
+					System.out.println("Exception caught for client: "
+							+ e.toString());
+					warzone = false;
+					e.printStackTrace();
+					break;
+				}
+
+				if (target.getName().equals("warzone")) {
+
+					if (target2.getName().equals("Earth")) {
+						System.out.println("in");
+						warzone = true;
+						ward.setAttackers(player.team);
+						break;
+					} else {
+						warzone = false;
+						System.out.println("ut");
+						break;
+					}
+				}*/
+				playerData.setPosition(new Vector3f(0, 0, 0));
+			}
+
+		}
+	}
+	
 }
