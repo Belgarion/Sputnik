@@ -10,19 +10,25 @@ public class BeamD extends GameObject{
 	
 	public BeamD() {
 		super();
-		this.speed = 100;
+		setSpeed(100);
 	}
 	
-	public BeamD(Player player){
+	public BeamD(Player player, Vector3f dir){
 		this();
+		setSpeed(100);
 		this.player = player;
 		this.position = player.getPosition();
+		this.direction = dir;
+		System.out.println(this.position);
+		System.out.println(dir);
 	}
 
 	@Override
 	public void update(){
-		this.direction = this.realDirection;
+		
+		//this.direction = this.realDirection;
 		this.position = this.realPosition.add(this.direction.mult((float) (getSpeed()*getTimeDifference())));
+
 	}
 
 }

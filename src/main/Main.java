@@ -56,11 +56,13 @@ public class Main extends SimpleApplication {
 	float sunrot = 0;
 	Client client;
 	Global global = Global.getInstance();
-	Meny meny;
+	static Meny meny;
 	War war;
 	WarD ward;
 	boolean warzone = false;
 	int counter = 0;
+	static String IP;
+	static int n = 0;
 
 	BitmapText GREEN;
 	BitmapText RED;
@@ -74,6 +76,7 @@ public class Main extends SimpleApplication {
 
 	public static void main(String[] args) {
 		Main app = new Main();
+		
 		app.start();
 	}
 
@@ -117,8 +120,6 @@ public class Main extends SimpleApplication {
 			go.update();
 		}
 		player.update();
-
-		
 		earth.update();
 		moon.update();
 		for (int i = 0; i < beams.size(); i++) {
@@ -138,16 +139,22 @@ public class Main extends SimpleApplication {
 
 	@Override
 	public void simpleInitApp() {
+		/*meny = new Meny();
+		while(!meny.started()){
+			// gör inget förens man har valt join eller host
+			System.out.println("lol");
+		}*/
+		//IP = meny.getIP();
 		initLights();
 		initObjects();
 		initKeys();
 		initCam();
 		initAudio();
-		// meny = new Meny(assetManager);
-
+		
 		threads = new Vector<Thread>();
 		try {
-			client = new Client("::1", 12345);
+			//System.out.println("bajs");
+			client = new Client("130.240.109.113", 12345);
 			NetworkRecvThread recvThread = new NetworkRecvThread(state, client);
 			NetworkSendThread sendThread = new NetworkSendThread(state, client);
 			threads.add(recvThread);
@@ -205,7 +212,7 @@ public class Main extends SimpleApplication {
 							.getWorldCoordinates(
 									new Vector2f(click2d.x, click2d.y), 1f)
 							.subtractLocal(click3d).normalizeLocal();
-					sharedstate.BeamD beamdata = new sharedstate.BeamD(playerData);
+					sharedstate.BeamD beamdata = new sharedstate.BeamD(playerData, dir);
 					state.getMyObjects().add(beamdata);
 					Beam beam = new Beam(beamdata, assetManager);
 					beams.add(beam);
@@ -221,7 +228,7 @@ public class Main extends SimpleApplication {
 	private void initCam() {
 		flyCam.setEnabled(false);
 		Cam = new ChaseCamera(cam, player.pnode, inputManager);
-		//Cam.setInvertVerticalAxis(true);
+		Cam.setInvertVerticalAxis(true);
 		Cam.setMaxDistance(4000);
 		Cam.setMinDistance(2);
 		Cam.setDefaultDistance(50);

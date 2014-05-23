@@ -8,7 +8,7 @@ import com.jme3.math.Vector3f;
 
 public abstract class GameObject { // TODO: synchronized
 	private UUID id;
-	private float speed;
+	protected float speed;
 	protected Vector3f direction; // calculated direction
 	protected Vector3f position; // calculated position
 	

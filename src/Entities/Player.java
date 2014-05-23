@@ -75,7 +75,6 @@ public class Player extends main.GraphicsObject {
 
 	public void update() {
 		Vector3f pos = data.getPosition();
-		data.setPosition(pos);
 		pnode.setLocalTranslation(pos);
 	}
 
