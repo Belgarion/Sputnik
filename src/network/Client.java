@@ -1,4 +1,4 @@
-package network;
+	package network;
 
 import java.net.*;
 import java.util.UUID;
@@ -11,6 +11,7 @@ public class Client {
 	private DatagramSocket sock;
 	private InetAddress ip;
 	private int port;
+	private double lastSentUpdate;
 	
 	private byte[] sendBuffer = new byte[1024];
 	private byte[] recvBuffer = new byte[1024];
@@ -26,9 +27,12 @@ public class Client {
 	public void sendState(sharedstate.SharedState state) throws Exception {
 		CopyOnWriteArrayList<GameObject> objs = state.getMyObjects();
 		for (GameObject obj : objs) {
-			sendBuffer = obj.toNetString().getBytes();//Gï¿½r om all info om objektet till en strï¿½ng.
-			DatagramPacket sendPacket = new DatagramPacket(sendBuffer, sendBuffer.length, ip, port);
-			sock.send(sendPacket);
+			//Skicka endast objekt som uppdaterats sedan sist.
+			if(obj.getLastTimeStamp() > lastSentUpdate){
+				sendBuffer = obj.toNetString().getBytes();//Gï¿½r om all info om objektet till en strï¿½ng.
+				DatagramPacket sendPacket = new DatagramPacket(sendBuffer, sendBuffer.length, ip, port);
+				sock.send(sendPacket);
+			}
 		}
 	}
 	
@@ -40,10 +44,15 @@ public class Client {
 		
 		String type = Utils.parseType(data);
 		if (type == null) return;
-		if (type.equals("Player")) {
+		if (type.equals("Player")) {//Här har vi problemet med allt! Den gör bara uppdateringar på objekt av typen player!
 			sharedstate.Player p = new sharedstate.Player();
 			p.fromNetString(data);
 			addOrUpdate(state, p, data);
+		}
+		if(type.equals("BeamD")){
+			sharedstate.BeamD b = new sharedstate.BeamD();
+			b.fromNetString(data);
+			addOrUpdate(state, b, data);
 		}
 	}
 	
@@ -54,6 +63,9 @@ public class Client {
 		for (GameObject g2 : state.getObjects()) {
 			if (id.equals(g2.getId())) {
 				found = true;
+				if (g.getLastTimeStamp() <= g2.getLastTimeStamp()) {
+					break; // old data dont use
+				}
 				g2.fromNetString(data);
 				break;
 			}

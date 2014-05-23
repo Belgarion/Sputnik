@@ -24,7 +24,7 @@ public class Player extends main.GraphicsObject {
 	public Vector3f dir, pos;
 	public float rotx, roty, rotz;
 
-	private sharedstate.Player data;
+	public sharedstate.Player data;
 	public Vector3f upVector;
 
 	
@@ -65,7 +65,7 @@ public class Player extends main.GraphicsObject {
 		ship.setMaterial(shipmat);
 
 		//data.setPosition(new Vector3f(posx, posy, posz));
-		data.setDirection(new Vector3f(0, 0, 1));
+		//data.setDirection(new Vector3f(0, 0, 1));
 		
 		pnode.setLocalTranslation(data.getPosition());
 		

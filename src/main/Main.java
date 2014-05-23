@@ -119,7 +119,7 @@ public class Main extends SimpleApplication {
 		for (GraphicsObject go : objs.values()) {
 			go.update();
 		}
-		player.update();
+
 		earth.update();
 		moon.update();
 		for (int i = 0; i < beams.size(); i++) {

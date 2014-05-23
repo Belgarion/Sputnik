@@ -8,6 +8,7 @@ import sharedstate.SharedState;
 public class NetworkSendThread extends Thread {
 	private SharedState state;
 	private Client client;
+	
 
 	Global global = Global.getInstance();
 	
@@ -25,12 +26,14 @@ public class NetworkSendThread extends Thread {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			/*try {
-				Thread.sleep(10); // TODO: should send when needed instead of sending everything every second
+
+			try {
+				Thread.sleep(1000); // TODO: should send when needed instead of sending everything every second. Kolla istället if changed eller jämför timestamps och liknande när deadreackoning körs.
+
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}*/
+			}
 		}
 	}
 }
