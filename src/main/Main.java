@@ -146,7 +146,7 @@ public class Main extends SimpleApplication {
 
 		threads = new Vector<Thread>();
 		try {
-			client = new Client("::1", 12345);
+			client = new Client("130.240.97.184", 12345);
 			NetworkRecvThread recvThread = new NetworkRecvThread(state, client);
 			NetworkSendThread sendThread = new NetworkSendThread(state, client);
 			threads.add(recvThread);
