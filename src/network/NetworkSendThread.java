@@ -27,7 +27,7 @@ public class NetworkSendThread extends Thread {
 				e.printStackTrace();
 			}
 			try {
-				Thread.sleep(1000); // TODO: should send when needed instead of sending everything every second
+				Thread.sleep(1000); // TODO: should send when needed instead of sending everything every second. Kolla istället if changed eller jämför timestamps och liknande när deadreackoning körs.
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
