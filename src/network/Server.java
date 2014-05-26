@@ -51,6 +51,20 @@ public class Server {
 					UUID id = Utils.parseId(data);
 					// TODO: Remove objects owned by player
 					continue;
+				} else if (type.equals("chat")) {
+					for(ClientData client : clients.values()) {
+						InetAddress ip1 = client.getIp();
+						int port1 = client.getPort();
+
+						sendBuffer2 = data.getBytes();
+						DatagramPacket sendPacket2 = new DatagramPacket(sendBuffer2, sendBuffer2.length, ip, port);
+						try {
+							sock.send(sendPacket2);
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}
+					continue;
 				}
 				// Send ack
 				UUID id = Utils.parseId(data);
@@ -58,11 +72,6 @@ public class Server {
 				sendBuffer = ("type:ACK " + id + "\n").getBytes();
 				DatagramPacket sendPacket = new DatagramPacket(sendBuffer, sendBuffer.length, ip, port);
 				sock.send(sendPacket);
-				
-				// Send all data in hashmap to client
-				// TODO: Keep list of all clients, send periodically (every 5 seconds or so) and when objects change.
-				// TODO: Move sending data to clients to thread?
-				
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -81,7 +90,6 @@ public class Server {
 				try {
 					sock.send(sendPacket2);
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 		}

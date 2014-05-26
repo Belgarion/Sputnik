@@ -20,7 +20,6 @@ public class Planet extends main.GraphicsObject {
 
 	@Override
 	public void update() {
-		// TODO Auto-generated method stub
 		
 	}
 

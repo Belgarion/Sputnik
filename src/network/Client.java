@@ -84,4 +84,14 @@ public class Client {
 	public void close() {
 		sock.close();
 	}
+	
+	public void sendChat(String message) {
+		try {
+		byte[] sendBuffer = ("type:chat\nmsg:" + message + "\n").getBytes();
+		DatagramPacket sendPacket = new DatagramPacket(sendBuffer, sendBuffer.length, ip, port);
+		sock.send(sendPacket);
+		} catch (Exception e) {
+			
+		}
+	}
 }
