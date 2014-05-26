@@ -62,6 +62,10 @@ public class Client {
 			sharedstate.BeamD b = new sharedstate.BeamD();
 			b.fromNetString(data);
 			addOrUpdate(state, b, data);
+		} else if(type.equals("Planet")){
+			sharedstate.Planet p = new sharedstate.Planet();
+			p.fromNetString(data);
+			addOrUpdate(state, p, data);
 		}
 	}
 	
