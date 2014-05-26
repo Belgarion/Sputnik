@@ -112,6 +112,8 @@ public class Main extends SimpleApplication {
 					objs.put(obj,  b);
 				}
 			}
+			
+			//Här kanske det ska in kod som gör att befintliga Beams rör sig.
 		}
 		
 		for (GraphicsObject go : objs.values()) {
@@ -120,6 +122,7 @@ public class Main extends SimpleApplication {
 
 		earth.update();
 		moon.update();
+
 		playerChecker();
 		warChecker();
 		String s1 = Long.toString(ward.counter1);
