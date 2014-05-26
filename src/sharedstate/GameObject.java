@@ -64,6 +64,8 @@ public abstract class GameObject { // TODO: synchronized
 
 	public void updateTime() {
 		update();
+		realPosition = position;
+		realDirection = direction;
 		lastTimestamp = System.currentTimeMillis() / 1000.0d;
 	}
 	
