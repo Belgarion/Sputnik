@@ -109,11 +109,11 @@ public class Main extends SimpleApplication {
 					objs.put(obj,  p);
 				} else if (obj instanceof sharedstate.BeamD){
 					weapons.Beam b = new weapons.Beam((sharedstate.BeamD)obj, assetManager);
+					rootNode.attachChild(b.bnode);
 					objs.put(obj,  b);
+
 				}
 			}
-			
-			//Här kanske det ska in kod som gör att befintliga Beams rör sig.
 		}
 		
 		for (GraphicsObject go : objs.values()) {
@@ -209,8 +209,7 @@ public class Main extends SimpleApplication {
 							.subtractLocal(click3d).normalizeLocal();
 					sharedstate.BeamD beamdata = new sharedstate.BeamD(playerData, dir);
 					state.getMyObjects().add(beamdata);
-					Beam beam = new Beam(beamdata, assetManager);
-					rootNode.attachChild(beam.bnode);
+					state.getObjects().add(beamdata);
 					audio_beam.playInstance();
 				}
 			}
