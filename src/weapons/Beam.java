@@ -30,14 +30,15 @@ public class Beam extends main.GraphicsObject {
                 "Common/MatDefs/Misc/Unshaded.j3md");
         mat1.setColor("Color", ColorRGBA.Red);
         beam.setMaterial(mat1);
-        bnode.setLocalTranslation(data.getPosition());
         bnode.attachChild(beam);
+        bnode.setLocalTranslation(data.getPosition());
 	}
 
 	
 	public void update(){
 		Vector3f pos = data.getPosition();
 		bnode.setLocalTranslation(pos);
+
 	}
 
 }

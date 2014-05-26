@@ -1,4 +1,4 @@
-package network;
+	package network;
 
 import java.net.*;
 import java.util.UUID;
@@ -44,10 +44,15 @@ public class Client {
 		
 		String type = Utils.parseType(data);
 		if (type == null) return;
-		if (type.equals("Player")) {
+		if (type.equals("Player")) {//Här har vi problemet med allt! Den gör bara uppdateringar på objekt av typen player!
 			sharedstate.Player p = new sharedstate.Player();
 			p.fromNetString(data);
 			addOrUpdate(state, p, data);
+		}
+		if(type.equals("BeamD")){
+			sharedstate.BeamD b = new sharedstate.BeamD();
+			b.fromNetString(data);
+			addOrUpdate(state, b, data);
 		}
 	}
 	
