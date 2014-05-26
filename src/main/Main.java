@@ -156,7 +156,7 @@ public class Main extends SimpleApplication {
 		threads = new Vector<Thread>();
 		try {
 			//System.out.println("bajs");
-			client = new Client("130.240.109.113", 12345);
+			client = new Client("130.240.94.213", 12345);
 			NetworkRecvThread recvThread = new NetworkRecvThread(state, client);
 			NetworkSendThread sendThread = new NetworkSendThread(state, client);
 			threads.add(recvThread);
