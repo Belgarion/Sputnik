@@ -18,7 +18,7 @@ public class ServerThread extends Thread {
 		while(!global.quit){
 			server.sendToClients();
 			try{
-				Thread.sleep(5);
+				Thread.sleep(1000);
 			}
 			catch(InterruptedException e){
 				e.printStackTrace();

@@ -68,12 +68,12 @@ public class Utils {
 		return new Vector3f(x, y, z);
 	}
 	
-	public static Double parseSpeed(String data) {
+	public static Float parseSpeed(String data) {
 		String[] lines = data.split("\n");
 		for (String line : lines) {
 			String[] parts = line.split(":", 2);
 			if (parts[0].equals("s")) {
-				return Double.parseDouble( parts[1].replace(",",".") );
+				return Float.parseFloat( parts[1].replace(",",".") );
 
 			}
 		}

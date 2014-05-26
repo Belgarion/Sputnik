@@ -28,5 +28,4 @@ public class BeamD extends GameObject{
 		this.position = this.realPosition.add(this.direction.mult((float) (getSpeed()*getTimeDifference())));
 
 	}
-
 }

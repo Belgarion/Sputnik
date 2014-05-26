@@ -133,7 +133,7 @@ public class Main extends SimpleApplication {
 	public void simpleInitApp() {
 		/*meny = new Meny();
 		while(!meny.started()){
-			// gör inget förens man har valt join eller host
+			// gï¿½r inget fï¿½rens man har valt join eller host
 			System.out.println("lol");
 		}*/
 		//IP = meny.getIP();
@@ -146,7 +146,7 @@ public class Main extends SimpleApplication {
 		threads = new Vector<Thread>();
 		try {
 			//System.out.println("bajs");
-			client = new Client("130.240.109.113", 12345);
+			client = new Client("::1", 12345);
 			NetworkRecvThread recvThread = new NetworkRecvThread(state, client);
 			NetworkSendThread sendThread = new NetworkSendThread(state, client);
 			threads.add(recvThread);

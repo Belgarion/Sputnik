@@ -1,6 +1,7 @@
 package sharedstate;
 
 
+import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class SharedState {
@@ -33,5 +34,9 @@ public class SharedState {
 	
 	public CopyOnWriteArrayList<GameObject> getObjects() {
 		return objects;
+	}
+	
+	public UUID getMyId() {
+		return player.getId();
 	}
 }

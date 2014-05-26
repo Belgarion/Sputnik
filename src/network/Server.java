@@ -23,10 +23,14 @@ public class Server {
 	
 	public Server() throws Exception {
 		state = new HashMap<UUID, String>();
+		clients = new HashMap<UUID, ClientData>();
 		sock = new DatagramSocket(12345);
 	}
 	
 	public void run() {
+		ServerThread sendToClients = new ServerThread(this);
+		sendToClients.start();
+		
 		while (true) {
 			try {
 				DatagramPacket recvPacket = new DatagramPacket(recvBuffer, recvBuffer.length);
@@ -58,7 +62,6 @@ public class Server {
 				// Send all data in hashmap to client
 				// TODO: Keep list of all clients, send periodically (every 5 seconds or so) and when objects change.
 				// TODO: Move sending data to clients to thread?
-				ServerThread sendToClients = new ServerThread(this);
 				
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -66,7 +69,7 @@ public class Server {
 		}
 	}
 	
-	//Skicka uppdateringar till alla klienter. Gör detta från en ny tråd.
+	//Skicka uppdateringar till alla klienter. Gï¿½r detta frï¿½n en ny trï¿½d.
 	public void sendToClients(){
 		for(ClientData client : clients.values()){
 			InetAddress ip = client.getIp();
