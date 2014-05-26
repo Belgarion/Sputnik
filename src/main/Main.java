@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Vector;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.swing.text.html.HTMLDocument.HTMLReader.IsindexAction;
 
@@ -14,6 +15,7 @@ import planets.Earth;
 import planets.Moon;
 import planets.Planet;
 import sharedstate.BeamD;
+import sharedstate.GameObject;
 import sharedstate.WarD;
 import weapons.Beam;
 import Entities.Player;
@@ -75,7 +77,7 @@ public class Main extends SimpleApplication {
 
 	public static void main(String[] args) {
 		Main app = new Main();
-		
+
 		app.start();
 	}
 
@@ -84,14 +86,12 @@ public class Main extends SimpleApplication {
 		global.quit = true;
 	}
 
-	
-
 	private void warChecker() {
 		war.checker(playerData);
 		if (war.warzone) {
 			ward.setAttackers(player.team);
 			ward.update();
-			//war.checker(playerData);
+			// war.checker(playerData);
 		}
 
 	}
@@ -105,56 +105,95 @@ public class Main extends SimpleApplication {
 		for (sharedstate.GameObject obj : state.getObjects()) {
 			if (!objs.containsKey(obj)) {
 				if (obj instanceof sharedstate.Player) {
-					Entities.Player p = new Player((sharedstate.Player)obj, assetManager);
+					Entities.Player p = new Player((sharedstate.Player) obj,
+							assetManager);
 					rootNode.attachChild(p.pnode);
-					objs.put(obj,  p);
-				} else if (obj instanceof sharedstate.BeamD){
-					weapons.Beam b = new weapons.Beam((sharedstate.BeamD)obj, assetManager);
+					objs.put(obj, p);
+				} else if (obj instanceof sharedstate.BeamD) {
+					weapons.Beam b = new weapons.Beam((sharedstate.BeamD) obj,
+							assetManager);
 					rootNode.attachChild(b.bnode);
-					objs.put(obj,  b);
+					objs.put(obj, b);
 
 				}
 			}
 		}
-		
+
 		for (GraphicsObject go : objs.values()) {
 			go.update();
 		}
 
 		earth.update();
-		moon.update();
-
+		MoonCheck();
 		playerChecker();
 		warChecker();
 		String s1 = Long.toString(ward.counter1);
 		String s2 = Long.toString(ward.counter2);
-		
+
 		GREEN.setText("Green: " + s1);
 		RED.setText("Red: " + s2);
 		chat.setText(state.chatMessage);
 	}
 
+	public void MoonCheck() {
+	
+		CopyOnWriteArrayList<GameObject> objects = state.getMyObjects();
+		for (int j = 0; j < objects.size(); j++) {
+			for (int i = 0; i < moons.size(); i++) {
+				CollisionResults results = new CollisionResults();
+				Vector3f opos = objects.get(j).getPosition();
+				Vector3f odir = objects.get(j).getDirection();
+				Ray ray = new Ray(opos, odir);
+				rootNode.collideWith(ray, results);
+				for (int k = 0; k < results.size(); k++) {
+					float dist = results.getCollision(k).getDistance();
+					if (dist < 2 && objects.get(j).type == "beam") {
+
+						Geometry target = results.getClosestCollision()
+								.getGeometry();
+						if (target.getName().equals("Moon")) {
+							Moon m1 = new Moon(new sharedstate.Planet(),
+									moons.get(i).size / 2, assetManager, earth,
+									1);
+							Moon m2 = new Moon(new sharedstate.Planet(),
+									moons.get(i).size / 2, assetManager, earth,
+									-1);
+							m1.data.setRotation(moons.get(i).mnode.getLocalRotation());
+							m2.data.setRotation(moons.get(i).mnode.getLocalRotation());
+							m1.setRotation();
+							m2.setRotation();
+							moons.add(m1);
+							moons.add(m2);
+							earth.enode.detachChild(moons.get(i).mnode);
+							moons.remove(i);
+							objects.remove(j);
+							return;
+						}
+					}
+
+				}
+			}
+		}
+
+	}
+
 	@Override
 	public void simpleInitApp() {
-		/*meny = new Meny();
-		while(!meny.started()){
-			// g�r inget f�rens man har valt join eller host
-			System.out.println("lol");
-		}*/
-		//IP = meny.getIP();
+		/*
+		 * meny = new Meny(); while(!meny.started()){ // g�r inget f�rens
+		 * man har valt join eller host System.out.println("lol"); }
+		 */
+		// IP = meny.getIP();
 		initLights();
 		initObjects();
 		initKeys();
 		initCam();
 		initAudio();
-		
+
 		threads = new Vector<Thread>();
 		try {
-			//System.out.println("bajs");
 
 			client = new Client("130.240.94.213", 12345);
-
-
 			NetworkRecvThread recvThread = new NetworkRecvThread(state, client);
 			NetworkSendThread sendThread = new NetworkSendThread(state, client);
 			threads.add(recvThread);
@@ -173,7 +212,6 @@ public class Main extends SimpleApplication {
 		}
 
 	}
-	
 	private void initAudio() {
 		assetManager.registerLocator("Assets", FileLocator.class);
 		audio_beam = new AudioNode(assetManager, "LASER1.WAV", false);
@@ -210,7 +248,8 @@ public class Main extends SimpleApplication {
 							.getWorldCoordinates(
 									new Vector2f(click2d.x, click2d.y), 1f)
 							.subtractLocal(click3d).normalizeLocal();
-					sharedstate.BeamD beamdata = new sharedstate.BeamD(playerData, dir);
+					sharedstate.BeamD beamdata = new sharedstate.BeamD(
+							playerData, dir);
 					state.getMyObjects().add(beamdata);
 					state.getObjects().add(beamdata);
 					audio_beam.playInstance();
@@ -228,8 +267,8 @@ public class Main extends SimpleApplication {
 		Cam.setMaxDistance(4000);
 		Cam.setMinDistance(2);
 		Cam.setDefaultDistance(50);
-		//Cam.setSmoothMotion(true);
-		
+		// Cam.setSmoothMotion(true);
+
 		Cam.setDefaultHorizontalRotation((float) (-Math.PI / 2));
 		Cam.setDefaultVerticalRotation((float) (Math.PI / 8));
 		Cam.setMaxVerticalRotation(360);
@@ -241,11 +280,10 @@ public class Main extends SimpleApplication {
 
 	private void initObjects() {
 
-		//cam.setLocation(new Vector3f(0f, 0f, 50f));
+		// cam.setLocation(new Vector3f(0f, 0f, 50f));
 		playerData = new sharedstate.Player();
 		playerData.setName("namn");
 		state = new sharedstate.SharedState(playerData);
-		
 		
 		sharedstate.Planet earthdata = new sharedstate.Planet(150);
 		earth = new Earth(earthdata, assetManager);
@@ -267,31 +305,31 @@ public class Main extends SimpleApplication {
 		war.war.setLocalTranslation(earth.enode.getLocalTranslation());
 		ward = new WarD();
 
-		//guiNode.addLight(sun);
-		setDisplayFps(false); 
+		// guiNode.addLight(sun);
+		setDisplayFps(false);
 		setDisplayStatView(false);
 
 		String s1 = Long.toString(ward.counter1);
 		String s2 = Long.toString(ward.counter2);
-		
+
 		GREEN = new BitmapText(guiFont, false);
-		GREEN.setSize(guiFont.getCharSet().getRenderedSize()); 
-		GREEN.setColor(ColorRGBA.Green); 
-		GREEN.setText("Green: " + s1); 
-		GREEN.setLocalTranslation(50, 100, 0); 
+		GREEN.setSize(guiFont.getCharSet().getRenderedSize());
+		GREEN.setColor(ColorRGBA.Green);
+		GREEN.setText("Green: " + s1);
+		GREEN.setLocalTranslation(50, 100, 0);
 
 		RED = new BitmapText(guiFont, false);
-		RED.setSize(guiFont.getCharSet().getRenderedSize()); 
+		RED.setSize(guiFont.getCharSet().getRenderedSize());
 		RED.setColor(ColorRGBA.Red);
 		RED.setText("Red: " + s2);
-		RED.setLocalTranslation(50, 50, 0); 
-		
+		RED.setLocalTranslation(50, 50, 0);
+
 		chat = new BitmapText(guiFont, false);
 		chat.setSize(guiFont.getCharSet().getRenderedSize());
 		chat.setColor(ColorRGBA.Yellow);
 		chat.setText("Chat");
 		chat.setLocalTranslation(50, 150, 0);
-		
+
 		guiNode.attachChild(RED);
 		guiNode.attachChild(GREEN);
 		guiNode.attachChild(chat);
@@ -345,7 +383,6 @@ public class Main extends SimpleApplication {
 		}
 	};
 
-	
 	private void playerChecker() {
 		CollisionResults results = new CollisionResults();
 		Vector3f ppos = playerData.getPosition();
@@ -357,14 +394,16 @@ public class Main extends SimpleApplication {
 			if (dist < 2) {
 
 				Geometry target = results.getClosestCollision().getGeometry();
-				if (target.getName().equals("Beam") || target.getName().equals("warzone")) {
+				if (target.getName().equals("Beam")
+						|| target.getName().equals("warzone")
+						|| target.getName().equals("shipA_OBJ-geom-0")) {
 					break;
 				}
-				
+				System.out.println(target);
 				playerData.setPosition(new Vector3f(0, 0, 0));
 			}
 
 		}
 	}
-	
+
 }

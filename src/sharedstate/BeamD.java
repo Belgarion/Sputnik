@@ -17,6 +17,7 @@ public class BeamD extends GameObject{
 	public BeamD(Player player, Vector3f dir){
 		this();
 		this.player = player;
+		this.type = "beam";
 		this.realPosition = player.getPosition();
 		this.realDirection = dir;
 	}

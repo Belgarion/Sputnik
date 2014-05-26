@@ -4,15 +4,19 @@ import com.jme3.asset.AssetManager;
 import com.jme3.asset.plugins.FileLocator;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
+import com.jme3.math.Quaternion;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
+import com.jme3.scene.Spatial.CullHint;
+import com.jme3.scene.shape.Box;
 import com.jme3.scene.shape.Sphere;
 import com.jme3.util.TangentBinormalGenerator;
 
 public class Moon extends Planet{
 	
 	public Node mnode;
-	public Geometry moon;
+	public Geometry moon, moonB;
+	public sharedstate.Planet data;
 	float rotspeed = 0.0005f;
 
 	public Moon(sharedstate.Planet data, AssetManager assetManager, Planet earth) {
@@ -31,11 +35,26 @@ public class Moon extends Planet{
 		mat1.setColor("Specular", ColorRGBA.White);
 		mat1.setFloat("Shininess", 1f); // [0,128]
 		moon.setMaterial(mat1);
-		//moon.rotate(-(float)Math.PI / 2, -(float)Math.PI / 2,0);
-		//mnode.rotate(0,0, (float) (2 * Math.PI / 360) * 23);
 		moon.setLocalTranslation(400, 0, 0);
+		
 		mnode.attachChild(moon);
+		//moon.setLocalRotation(earth.node.getLocalRotation());
 		earth.node.attachChild(mnode);
+		
+		//Sphere sphere = new Sphere(50, 50, planet.size + 100);
+		Box box = new Box(size * 1.2f, size * 1.2f, size * 1.2f);
+		moonB = new Geometry("moonbox", box);
+		Material mat2 = new Material(assetManager,
+				"Common/MatDefs/Light/Lighting.j3md");
+		moonB.setMaterial(mat2);
+		moonB.setCullHint(CullHint.Always);
+		mnode.attachChild(moonB);
+		
+		
+	}
+	
+	public void setRotation(){
+		mnode.setLocalRotation(data.rotation);
 	}
 	
 	public void update(){

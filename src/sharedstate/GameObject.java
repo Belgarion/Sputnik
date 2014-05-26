@@ -17,6 +17,8 @@ public abstract class GameObject { // TODO: synchronized
 	protected Vector3f realDirection; // last received value for direction
 	protected Vector3f realPosition; // last received value for posititon
 	
+	public String type = "";
+	
 	public GameObject() {
 		id = UUID.randomUUID();
 		speed = 0;
