@@ -1,9 +1,11 @@
 package sharedstate;
 
+import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 
 public class BeamD extends GameObject{
 	
+	private ColorRGBA color;
 	private float speed;
 	private Player player;
 	private int start = 100;
@@ -29,6 +31,15 @@ public class BeamD extends GameObject{
 		//this.direction = this.realDirection;
 		this.position = this.realPosition.add(this.direction.mult((float) (getSpeed()*getTimeDifference())));
 
+	}
+	
+	public String toNetString() {
+		StringBuffer sb = new StringBuffer();
+		sb.append("type:BeamD\n");
+		//sb.append("rs:" + rotateSpeed + "\n");
+		sb.append("co:" + color + "\n");
+		sb.append(super.toNetString());
+		return sb.toString();
 	}
 
 }
