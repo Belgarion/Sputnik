@@ -19,8 +19,10 @@ public class Player extends GameObject {
 
 	@Override
 	public void update() {
+		System.out.println("Updating player " + this + " oldPosition " + this.position + " direction " + this.direction );
 		this.direction = this.realDirection;
 		this.position = this.realPosition.add(this.direction.mult((float) (getSpeed()*getTimeDifference())));
+		System.out.println("New position " + this.position);
 	}
 
 	@Override

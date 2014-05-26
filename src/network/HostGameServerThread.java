@@ -3,14 +3,13 @@ package network;
 public class HostGameServerThread extends Thread{
 	Server server;
 	/*
-	 * Den här klassen är bara påbörjad. Den ska användas för att få in nya spelare i gamet när de tryckt join.
-	 * De skriver in serverns ip och klickar på join.
+	 * Den hï¿½r klassen ï¿½r bara pï¿½bï¿½rjad. Den ska anvï¿½ndas fï¿½r att fï¿½ in nya spelare i gamet nï¿½r de tryckt join.
+	 * De skriver in serverns ip och klickar pï¿½ join.
 	 */
 	public HostGameServerThread(){
 		try {
 			server = new Server();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

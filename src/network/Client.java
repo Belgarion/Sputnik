@@ -13,8 +13,9 @@ public class Client {
 	private int port;
 	private double lastSentUpdate;
 	
-	private byte[] sendBuffer = new byte[1024];
 	private byte[] recvBuffer = new byte[1024];
+	
+	private boolean connected = false;
 	
 	public Client(String hostname, int port) throws Exception {
 		sock = new DatagramSocket();
@@ -25,11 +26,18 @@ public class Client {
 	}
 	
 	public void sendState(sharedstate.SharedState state) throws Exception {
+		System.out.println("Sending state");
+		if (!connected) {
+			byte[] sendBuffer = ("type:connect\nid:" + state.getMyId() + "\n").getBytes();
+			DatagramPacket sendPacket = new DatagramPacket(sendBuffer, sendBuffer.length, ip, port);
+			sock.send(sendPacket);
+			connected = true;
+		}
 		CopyOnWriteArrayList<GameObject> objs = state.getMyObjects();
 		for (GameObject obj : objs) {
 			//Skicka endast objekt som uppdaterats sedan sist.
 			if(obj.getLastTimeStamp() > lastSentUpdate){
-				sendBuffer = obj.toNetString().getBytes();//Gï¿½r om all info om objektet till en strï¿½ng.
+				byte[] sendBuffer = obj.toNetString().getBytes();//Gï¿½r om all info om objektet till en strï¿½ng.
 				DatagramPacket sendPacket = new DatagramPacket(sendBuffer, sendBuffer.length, ip, port);
 				sock.send(sendPacket);
 			}
@@ -44,12 +52,13 @@ public class Client {
 		
 		String type = Utils.parseType(data);
 		if (type == null) return;
-		if (type.equals("Player")) {//Här har vi problemet med allt! Den gör bara uppdateringar på objekt av typen player!
+		if (type.equals("chat")) {
+			state.chatMessage = Utils.parseMsg(data);
+		} else if (type.equals("Player")) {
 			sharedstate.Player p = new sharedstate.Player();
 			p.fromNetString(data);
 			addOrUpdate(state, p, data);
-		}
-		if(type.equals("BeamD")){
+		} else if(type.equals("BeamD")){
 			sharedstate.BeamD b = new sharedstate.BeamD();
 			b.fromNetString(data);
 			addOrUpdate(state, b, data);
@@ -75,5 +84,15 @@ public class Client {
 	
 	public void close() {
 		sock.close();
+	}
+	
+	public void sendChat(String message) {
+		try {
+		byte[] sendBuffer = ("type:chat\nmsg:" + message + "\n").getBytes();
+		DatagramPacket sendPacket = new DatagramPacket(sendBuffer, sendBuffer.length, ip, port);
+		sock.send(sendPacket);
+		} catch (Exception e) {
+			
+		}
 	}
 }

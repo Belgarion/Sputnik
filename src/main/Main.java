@@ -48,8 +48,6 @@ public class Main extends SimpleApplication {
 	ChaseCamera Cam;
 	Player player;
 	Earth earth;
-	ArrayList<Beam> beams;
-	ArrayList<Player> players = new ArrayList<>();
 	AudioNode audio_beam;
 	Moon moon;
 	DirectionalLight sun;
@@ -66,6 +64,7 @@ public class Main extends SimpleApplication {
 
 	BitmapText GREEN;
 	BitmapText RED;
+	BitmapText chat;
 
 	sharedstate.Player playerData;
 	sharedstate.SharedState state;
@@ -111,11 +110,11 @@ public class Main extends SimpleApplication {
 					objs.put(obj,  p);
 				} else if (obj instanceof sharedstate.BeamD){
 					weapons.Beam b = new weapons.Beam((sharedstate.BeamD)obj, assetManager);
+					rootNode.attachChild(b.bnode);
 					objs.put(obj,  b);
+
 				}
 			}
-			
-			//Här kanske det ska in kod som gör att befintliga Beams rör sig.
 		}
 		
 		for (GraphicsObject go : objs.values()) {
@@ -124,9 +123,7 @@ public class Main extends SimpleApplication {
 
 		earth.update();
 		moon.update();
-		for (int i = 0; i < beams.size(); i++) {//Va i helvete är det här?
-			beams.get(i).update();
-		}
+
 		playerChecker();
 		warChecker();
 		String s1 = Long.toString(ward.counter1);
@@ -134,16 +131,14 @@ public class Main extends SimpleApplication {
 		
 		GREEN.setText("Green: " + s1);
 		RED.setText("Red: " + s2);
-		
-
-
+		chat.setText(state.chatMessage);
 	}
 
 	@Override
 	public void simpleInitApp() {
 		/*meny = new Meny();
 		while(!meny.started()){
-			// gör inget förens man har valt join eller host
+			// gï¿½r inget fï¿½rens man har valt join eller host
 			System.out.println("lol");
 		}*/
 		//IP = meny.getIP();
@@ -156,7 +151,10 @@ public class Main extends SimpleApplication {
 		threads = new Vector<Thread>();
 		try {
 			//System.out.println("bajs");
+
 			client = new Client("130.240.94.213", 12345);
+
+
 			NetworkRecvThread recvThread = new NetworkRecvThread(state, client);
 			NetworkSendThread sendThread = new NetworkSendThread(state, client);
 			threads.add(recvThread);
@@ -216,9 +214,7 @@ public class Main extends SimpleApplication {
 							.subtractLocal(click3d).normalizeLocal();
 					sharedstate.BeamD beamdata = new sharedstate.BeamD(playerData, dir);
 					state.getMyObjects().add(beamdata);
-					Beam beam = new Beam(beamdata, assetManager);
-					beams.add(beam);
-					rootNode.attachChild(beam.bnode);
+					state.getObjects().add(beamdata);
 					audio_beam.playInstance();
 				}
 			}
@@ -258,12 +254,10 @@ public class Main extends SimpleApplication {
 		earth = new Earth(new sharedstate.Planet(), 150, assetManager);
 		moon = new Moon(new sharedstate.Planet(), 50, assetManager, earth);
 		player = new Player(playerData, assetManager);
-		players.add(player);
 		objs.put(playerData, player);
 		rootNode.attachChild(player.pnode);
 		rootNode.attachChild(earth.enode);
 		earth.enode.setLocalTranslation(0, 0, 400);
-		beams = new ArrayList<Beam>();
 
 		war = new War(earth, assetManager);
 		rootNode.attachChild(war.war);
@@ -288,9 +282,16 @@ public class Main extends SimpleApplication {
 		RED.setColor(ColorRGBA.Red);
 		RED.setText("Red: " + s2);
 		RED.setLocalTranslation(50, 50, 0); 
-
+		
+		chat = new BitmapText(guiFont, false);
+		chat.setSize(guiFont.getCharSet().getRenderedSize());
+		chat.setColor(ColorRGBA.Yellow);
+		chat.setText("Chat");
+		chat.setLocalTranslation(50, 150, 0);
+		
 		guiNode.attachChild(RED);
 		guiNode.attachChild(GREEN);
+		guiNode.attachChild(chat);
 
 	}
 

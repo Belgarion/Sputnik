@@ -23,10 +23,14 @@ public class Server {
 	
 	public Server() throws Exception {
 		state = new HashMap<UUID, String>();
+		clients = new HashMap<UUID, ClientData>();
 		sock = new DatagramSocket(12345);
 	}
 	
 	public void run() {
+		ServerThread sendToClients = new ServerThread(this);
+		sendToClients.start();
+		
 		while (true) {
 			try {
 				DatagramPacket recvPacket = new DatagramPacket(recvBuffer, recvBuffer.length);
@@ -47,6 +51,20 @@ public class Server {
 					UUID id = Utils.parseId(data);
 					// TODO: Remove objects owned by player
 					continue;
+				} else if (type.equals("chat")) {
+					for(ClientData client : clients.values()) {
+						InetAddress ip1 = client.getIp();
+						int port1 = client.getPort();
+
+						sendBuffer2 = data.getBytes();
+						DatagramPacket sendPacket2 = new DatagramPacket(sendBuffer2, sendBuffer2.length, ip, port);
+						try {
+							sock.send(sendPacket2);
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}
+					continue;
 				}
 				// Send ack
 				UUID id = Utils.parseId(data);
@@ -54,19 +72,13 @@ public class Server {
 				sendBuffer = ("type:ACK " + id + "\n").getBytes();
 				DatagramPacket sendPacket = new DatagramPacket(sendBuffer, sendBuffer.length, ip, port);
 				sock.send(sendPacket);
-				
-				// Send all data in hashmap to client
-				// TODO: Keep list of all clients, send periodically (every 5 seconds or so) and when objects change.
-				// TODO: Move sending data to clients to thread?
-				ServerThread sendToClients = new ServerThread(this);
-				
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
 	}
 	
-	//Skicka uppdateringar till alla klienter. Gör detta från en ny tråd.
+	//Skicka uppdateringar till alla klienter. Gï¿½r detta frï¿½n en ny trï¿½d.
 	public void sendToClients(){
 		for(ClientData client : clients.values()){
 			InetAddress ip = client.getIp();
@@ -78,7 +90,6 @@ public class Server {
 				try {
 					sock.send(sendPacket2);
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 		}

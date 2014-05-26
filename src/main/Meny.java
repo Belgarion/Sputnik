@@ -27,8 +27,8 @@ import Entities.Player;
 
 public class Meny extends JFrame implements ActionListener, ChangeListener {
 	
-	// TODO: join ska öppna textfält där man skriver in ip på servern man ska joina
-	// Host ska starta servern och sätta ip man ska joina till localhost.
+	// TODO: join ska ï¿½ppna textfï¿½lt dï¿½r man skriver in ip pï¿½ servern man ska joina
+	// Host ska starta servern och sï¿½tta ip man ska joina till localhost.
 
 	JPanel mypanel;
 	JButton hostb, joinb;
@@ -73,7 +73,6 @@ public class Meny extends JFrame implements ActionListener, ChangeListener {
 			try {
 				address = InetAddress.getLocalHost();
 			} catch (UnknownHostException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			} 
 		    IP = "::1";

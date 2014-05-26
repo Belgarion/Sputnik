@@ -43,6 +43,7 @@ public abstract class GameObject { // TODO: synchronized
 		lastTimestamp = Utils.parseTimestamp(data);
 		realPosition = Utils.parsePosition(data);
 		realDirection = Utils.parseDirection(data);
+		speed = Utils.parseSpeed(data);
 	}
 	
 	public Vector3f getDirection() { return direction; }
@@ -63,6 +64,8 @@ public abstract class GameObject { // TODO: synchronized
 
 	public void updateTime() {
 		update();
+		realPosition = position;
+		realDirection = direction;
 		lastTimestamp = System.currentTimeMillis() / 1000.0d;
 	}
 	

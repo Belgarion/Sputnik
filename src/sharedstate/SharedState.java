@@ -1,12 +1,14 @@
 package sharedstate;
 
 
+import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class SharedState {
 	CopyOnWriteArrayList<GameObject> objects; // all objects
 	CopyOnWriteArrayList<GameObject> myObjects; // objects owned by me
 	Player player; // my player
+	public String chatMessage = "Chat";
 	
 	public SharedState(Player player) {
 		objects = new CopyOnWriteArrayList<GameObject>();
@@ -18,8 +20,9 @@ public class SharedState {
 	}
 	
 	public void update() {
-
-		//player.update();
+		for (GameObject obj : myObjects) {
+			obj.update();
+		}
 
 		for (GameObject obj : objects) {
 			obj.update();
@@ -32,5 +35,9 @@ public class SharedState {
 	
 	public CopyOnWriteArrayList<GameObject> getObjects() {
 		return objects;
+	}
+	
+	public UUID getMyId() {
+		return player.getId();
 	}
 }

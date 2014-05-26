@@ -23,7 +23,6 @@ public class NetworkRecvThread extends Thread {
 			} catch (SocketTimeoutException e) {
 				
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} 
 		}
