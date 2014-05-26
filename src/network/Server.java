@@ -80,7 +80,7 @@ public class Server {
 	
 	//Skicka uppdateringar till alla klienter. G�r detta fr�n en ny tr�d.
 	public void sendToClients(){
-		for(ClientData client : clients.values()){
+		for(network.ClientData client : clients.values()){
 			InetAddress ip = client.getIp();
 			int port = client.getPort();
 			

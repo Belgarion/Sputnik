@@ -1,7 +1,7 @@
 package main;
 
 public abstract class GraphicsObject {
-	private sharedstate.GameObject data;
+	public sharedstate.GameObject data;
 	public GraphicsObject(sharedstate.GameObject obj) {
 		data = obj;
 	}

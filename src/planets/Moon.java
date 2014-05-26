@@ -15,11 +15,11 @@ public class Moon extends Planet{
 	public Geometry moon;
 	float rotspeed = 0.0005f;
 
-	public Moon(sharedstate.GameObject data, int size,  AssetManager assetManager, Planet earth) {
-		super(data, size);
+	public Moon(sharedstate.Planet data, AssetManager assetManager, Planet earth) {
+		super(data);
 		mnode = new Node();
 		assetManager.registerLocator("Assets", FileLocator.class);
-		Sphere sphere = new Sphere(50, 50, size);
+		Sphere sphere = new Sphere(50, 50, data.getSize());
 		moon = new Geometry("Moon", sphere);
 		sphere.setTextureMode(Sphere.TextureMode.Projected);
 		TangentBinormalGenerator.generate(sphere);
@@ -39,7 +39,7 @@ public class Moon extends Planet{
 	}
 	
 	public void update(){
-		mnode.rotate(0, rotspeed, 0);
+		mnode.setLocalRotation(((sharedstate.Planet)data).getRotation());
 	}
 	
 	

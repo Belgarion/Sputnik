@@ -18,12 +18,12 @@ public class Earth extends Planet {
 	public Geometry earth;
 	float rotspeed = 0.00005f;
 
-	public Earth(sharedstate.GameObject data, int size, AssetManager assetManager) {
-		super(data, size);
+	public Earth(sharedstate.Planet data, AssetManager assetManager) {
+		super(data);
 		enode = new Node();
 		super.node = enode;
 		assetManager.registerLocator("Assets", FileLocator.class);
-		Sphere sphere = new Sphere(50, 50, size);
+		Sphere sphere = new Sphere(50, 50, data.getSize());
 		earth = new Geometry("Earth", sphere);
 		sphere.setTextureMode(Sphere.TextureMode.Projected);
 		TangentBinormalGenerator.generate(sphere);
@@ -43,8 +43,9 @@ public class Earth extends Planet {
 		enode.attachChild(child);
 	}
 	
-	public void update(){
-		enode.rotate(0, rotspeed, 0);
+	public void update() {
+		enode.setLocalRotation(((sharedstate.Planet)data).getRotation());
+		System.out.println("Rotation: " + ((sharedstate.Planet)data).getRotation());
 	}
 
 }

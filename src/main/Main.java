@@ -171,8 +171,6 @@ public class Main extends SimpleApplication {
 
 	}
 	
-	
-
 	private void initAudio() {
 		assetManager.registerLocator("Assets", FileLocator.class);
 		audio_beam = new AudioNode(assetManager, "LASER1.WAV", false);
@@ -229,8 +227,6 @@ public class Main extends SimpleApplication {
 		Cam.setDefaultDistance(50);
 		//Cam.setSmoothMotion(true);
 		
-		
-
 		Cam.setDefaultHorizontalRotation((float) (-Math.PI / 2));
 		Cam.setDefaultVerticalRotation((float) (Math.PI / 8));
 		Cam.setMaxVerticalRotation(360);
@@ -248,8 +244,15 @@ public class Main extends SimpleApplication {
 		state = new sharedstate.SharedState(playerData);
 		
 		
-		earth = new Earth(new sharedstate.Planet(), 150, assetManager);
-		moon = new Moon(new sharedstate.Planet(), 50, assetManager, earth);
+		sharedstate.Planet earthdata = new sharedstate.Planet(150);
+		earth = new Earth(earthdata, assetManager);
+		state.getObjects().add(earthdata);
+		objs.put(earthdata, earth);
+		sharedstate.Planet moondata = new sharedstate.Planet(50);
+		moon = new Moon(moondata, assetManager, earth);
+		state.getObjects().add(moondata);
+		objs.put(moondata, moon);
+
 		player = new Player(playerData, assetManager);
 		objs.put(playerData, player);
 		rootNode.attachChild(player.pnode);

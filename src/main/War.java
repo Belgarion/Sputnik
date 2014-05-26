@@ -33,7 +33,7 @@ public class War {
 		counter1 = 0;
 		counter2 = 0;
 		this.planet = planet;
-		this.size = planet.size * 1.3f;
+		this.size = (((sharedstate.Planet)(planet.data)).getSize()) * 1.3f;
 		//Sphere sphere = new Sphere(50, 50, planet.size + 100);
 		Box box = new Box(size, size, size);
 		war = new Geometry("warzone", box);
