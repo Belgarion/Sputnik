@@ -48,8 +48,6 @@ public class Main extends SimpleApplication {
 	ChaseCamera Cam;
 	Player player;
 	Earth earth;
-	ArrayList<Beam> beams;
-	ArrayList<Player> players = new ArrayList<>();
 	AudioNode audio_beam;
 	Moon moon;
 	DirectionalLight sun;
@@ -120,9 +118,6 @@ public class Main extends SimpleApplication {
 		
 		earth.update();
 		moon.update();
-		for (int i = 0; i < beams.size(); i++) {
-			beams.get(i).update();
-		}
 		playerChecker();
 		warChecker();
 		String s1 = Long.toString(ward.counter1);
@@ -130,9 +125,6 @@ public class Main extends SimpleApplication {
 		
 		GREEN.setText("Green: " + s1);
 		RED.setText("Red: " + s2);
-		
-
-
 	}
 
 	@Override
@@ -204,10 +196,9 @@ public class Main extends SimpleApplication {
 							.getWorldCoordinates(
 									new Vector2f(click2d.x, click2d.y), 1f)
 							.subtractLocal(click3d).normalizeLocal();
-					sharedstate.BeamD beamdata = new sharedstate.BeamD(playerData);
+					sharedstate.BeamD beamdata = new sharedstate.BeamD(playerData, dir);
 					state.getMyObjects().add(beamdata);
 					Beam beam = new Beam(beamdata, assetManager);
-					beams.add(beam);
 					rootNode.attachChild(beam.bnode);
 					audio_beam.playInstance();
 				}
@@ -248,12 +239,10 @@ public class Main extends SimpleApplication {
 		earth = new Earth(new sharedstate.Planet(), 150, assetManager);
 		moon = new Moon(new sharedstate.Planet(), 50, assetManager, earth);
 		player = new Player(playerData, assetManager);
-		players.add(player);
 		objs.put(playerData, player);
 		rootNode.attachChild(player.pnode);
 		rootNode.attachChild(earth.enode);
 		earth.enode.setLocalTranslation(0, 0, 400);
-		beams = new ArrayList<Beam>();
 
 		war = new War(earth, assetManager);
 		rootNode.attachChild(war.war);

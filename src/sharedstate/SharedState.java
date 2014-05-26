@@ -18,6 +18,9 @@ public class SharedState {
 	}
 	
 	public void update() {
+		for (GameObject obj : myObjects) {
+			obj.update();
+		}
 		for (GameObject obj : objects) {
 			obj.update();
 		}
