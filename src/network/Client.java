@@ -52,12 +52,13 @@ public class Client {
 		
 		String type = Utils.parseType(data);
 		if (type == null) return;
-		if (type.equals("Player")) {//H�r har vi problemet med allt! Den g�r bara uppdateringar p� objekt av typen player!
+		if (type.equals("chat")) {
+			state.chatMessage = Utils.parseMsg(data);
+		} else if (type.equals("Player")) {
 			sharedstate.Player p = new sharedstate.Player();
 			p.fromNetString(data);
 			addOrUpdate(state, p, data);
-		}
-		if(type.equals("BeamD")){
+		} else if(type.equals("BeamD")){
 			sharedstate.BeamD b = new sharedstate.BeamD();
 			b.fromNetString(data);
 			addOrUpdate(state, b, data);

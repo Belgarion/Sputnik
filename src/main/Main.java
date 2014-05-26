@@ -64,6 +64,7 @@ public class Main extends SimpleApplication {
 
 	BitmapText GREEN;
 	BitmapText RED;
+	BitmapText chat;
 
 	sharedstate.Player playerData;
 	sharedstate.SharedState state;
@@ -130,6 +131,7 @@ public class Main extends SimpleApplication {
 		
 		GREEN.setText("Green: " + s1);
 		RED.setText("Red: " + s2);
+		chat.setText(state.chatMessage);
 	}
 
 	@Override
@@ -277,9 +279,16 @@ public class Main extends SimpleApplication {
 		RED.setColor(ColorRGBA.Red);
 		RED.setText("Red: " + s2);
 		RED.setLocalTranslation(50, 50, 0); 
-
+		
+		chat = new BitmapText(guiFont, false);
+		chat.setSize(guiFont.getCharSet().getRenderedSize());
+		chat.setColor(ColorRGBA.Yellow);
+		chat.setText("Chat");
+		chat.setLocalTranslation(50, 150, 0);
+		
 		guiNode.attachChild(RED);
 		guiNode.attachChild(GREEN);
+		guiNode.attachChild(chat);
 
 	}
 

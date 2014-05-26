@@ -27,6 +27,17 @@ public class Utils {
 		return null;
 	}
 	
+	public static String parseMsg(String data) {
+		String[] lines = data.split("\n");
+		for (String line : lines) {
+			String[] parts = line.split(":", 2);
+			if (parts[0].equals("msg")) {
+				return parts[1];
+			}
+		}
+		return null;
+	}
+	
 	public static Double parseTimestamp(String data) {
 		String[] lines = data.split("\n");
 		for (String line : lines) {

@@ -8,6 +8,7 @@ public class SharedState {
 	CopyOnWriteArrayList<GameObject> objects; // all objects
 	CopyOnWriteArrayList<GameObject> myObjects; // objects owned by me
 	Player player; // my player
+	public String chatMessage = "Chat";
 	
 	public SharedState(Player player) {
 		objects = new CopyOnWriteArrayList<GameObject>();
