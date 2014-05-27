@@ -71,4 +71,11 @@ public class Player extends GameObject {
 		this.team = team;
 	}
 
+	@Override
+	public int getSize() {
+		return 0;
+		// TODO Auto-generated method stub
+		
+	}
+
 }

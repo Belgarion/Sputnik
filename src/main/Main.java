@@ -136,45 +136,39 @@ public class Main extends SimpleApplication {
 	}
 
 	public void MoonCheck() {
-	
+
 		CopyOnWriteArrayList<GameObject> objects = state.getMyObjects();
 		for (int j = 0; j < objects.size(); j++) {
-			for (int i = 0; i < moons.size(); i++) {
+			for (int i = 0; i < objects.size(); i++) {
+
 				CollisionResults results = new CollisionResults();
 				Vector3f opos = objects.get(j).getPosition();
 				Vector3f odir = objects.get(j).getDirection();
 				Ray ray = new Ray(opos, odir);
 				rootNode.collideWith(ray, results);
+
 				for (int k = 0; k < results.size(); k++) {
 					float dist = results.getCollision(k).getDistance();
-					if (dist < 2 && objects.get(j).type == "beam") {
 
+					if (dist < 2 && objects.get(j).type == "beam") {
 						Geometry target = results.getClosestCollision()
 								.getGeometry();
 						if (target.getName().equals("Moon")) {
-							Moon m1 = new Moon(new sharedstate.Planet(),
-									moons.get(i).size / 2, assetManager, earth,
-									1);
-							Moon m2 = new Moon(new sharedstate.Planet(),
-									moons.get(i).size / 2, assetManager, earth,
-									-1);
-							m1.data.setRotation(moons.get(i).mnode.getLocalRotation());
-							m2.data.setRotation(moons.get(i).mnode.getLocalRotation());
+							Moon m1 = new Moon(new sharedstate.Planet(objects
+									.get(i).getSize() / 2), assetManager, earth);
+							Moon m2 = new Moon(new sharedstate.Planet(objects
+									.get(i).getSize() / 2), assetManager, earth);
 							m1.setRotation();
 							m2.setRotation();
-							moons.add(m1);
-							moons.add(m2);
-							earth.enode.detachChild(moons.get(i).mnode);
-							moons.remove(i);
-							objects.remove(j);
+							objects.remove(i);
 							return;
-						}
-					}
 
+						}
+
+					}
 				}
 			}
 		}
-
 	}
 
 	@Override
@@ -212,6 +206,7 @@ public class Main extends SimpleApplication {
 		}
 
 	}
+
 	private void initAudio() {
 		assetManager.registerLocator("Assets", FileLocator.class);
 		audio_beam = new AudioNode(assetManager, "LASER1.WAV", false);
@@ -284,13 +279,15 @@ public class Main extends SimpleApplication {
 		playerData = new sharedstate.Player();
 		playerData.setName("namn");
 		state = new sharedstate.SharedState(playerData);
-		
+
 		sharedstate.Planet earthdata = new sharedstate.Planet(150);
 		earth = new Earth(earthdata, assetManager);
 		state.getObjects().add(earthdata);
 		objs.put(earthdata, earth);
 		sharedstate.Planet moondata = new sharedstate.Planet(50);
 		moon = new Moon(moondata, assetManager, earth);
+		moondata.setRotation(new Quaternion(0,0,0,1));
+		moon.setRotation();
 		state.getObjects().add(moondata);
 		objs.put(moondata, moon);
 

@@ -1,9 +1,8 @@
 package sharedstate;
 
-<<<<<<< HEAD
+
 import com.jme3.math.FastMath;
-=======
->>>>>>> 4a307bfb1aa3d385bc776be59a093249bc689cc4
+
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 
@@ -11,8 +10,6 @@ public class Planet extends GameObject {
 	private int size;
 	private Quaternion rotation;
 	private float angle;
-
-	public Quaternion rotation;
 
 	@Override
 	public void update() {

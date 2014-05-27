@@ -22,6 +22,7 @@ public class Moon extends Planet{
 	public Moon(sharedstate.Planet data, AssetManager assetManager, Planet earth) {
 		super(data);
 		mnode = new Node();
+		this.data = data;
 		assetManager.registerLocator("Assets", FileLocator.class);
 		Sphere sphere = new Sphere(50, 50, data.getSize());
 		moon = new Geometry("Moon", sphere);
@@ -42,23 +43,23 @@ public class Moon extends Planet{
 		earth.node.attachChild(mnode);
 		
 		//Sphere sphere = new Sphere(50, 50, planet.size + 100);
-		Box box = new Box(size * 1.2f, size * 1.2f, size * 1.2f);
-		moonB = new Geometry("moonbox", box);
+		//Box box = new Box(size * 1.2f, size * 1.2f, size * 1.2f);
+		/*moonB = new Geometry("moonbox", box);
 		Material mat2 = new Material(assetManager,
 				"Common/MatDefs/Light/Lighting.j3md");
 		moonB.setMaterial(mat2);
-		moonB.setCullHint(CullHint.Always);
-		mnode.attachChild(moonB);
+		moonB.setCullHint(CullHint.Always);*/
+		//mnode.attachChild(moonB);
 		
 		
 	}
 	
 	public void setRotation(){
-		mnode.setLocalRotation(data.rotation);
+		mnode.setLocalRotation(data.getRotation());
 	}
 	
 	public void update(){
-		mnode.setLocalRotation(((sharedstate.Planet)data).getRotation());
+		mnode.setLocalRotation(data.getRotation());
 	}
 	
 	

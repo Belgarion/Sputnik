@@ -32,4 +32,10 @@ public class WarD extends GameObject {
 		team = attack;
 	}
 
+	@Override
+	public int getSize() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 }

@@ -36,4 +36,9 @@ public class BeamD extends GameObject{
 		return sb.toString();
 	}
 
+	@Override
+	public int getSize() {
+		return 0;
+	}
+
 }

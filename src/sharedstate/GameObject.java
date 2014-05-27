@@ -9,6 +9,7 @@ import com.jme3.math.Vector3f;
 public abstract class GameObject { // TODO: synchronized
 	private UUID id;
 	protected float speed;
+	protected int size;
 	protected Vector3f direction; // calculated direction
 	protected Vector3f position; // calculated position
 	
@@ -30,6 +31,7 @@ public abstract class GameObject { // TODO: synchronized
 	}
 	
 	public abstract void update(); // dead reckoning
+	public abstract int getSize();
 	
 	public String toNetString() { // convert to string for sending over network
 		StringBuffer sb = new StringBuffer();
